@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jonghong/firebase_options.dart';
 import 'package:jonghong/pages/home_page.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -27,3 +27,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
