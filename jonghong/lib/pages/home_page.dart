@@ -32,12 +32,28 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+    
+  //     appBar: AppBar(
+  //       title: const Text("Google SignIn")
+  //     ),
+  //     body: _user != null ? _userInfo() : _googleSignInButton(),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
       appBar: AppBar(
-        title: const Text("Google SignIn")
+        title: const Text("Google SignIn"),
+        actions: [
+          if (_user != null) IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _handleLogout,
+          ),
+        ],
       ),
       body: _user != null ? _userInfo() : _googleSignInButton(),
     );
@@ -80,6 +96,7 @@ class _HomepageState extends State<Homepage> {
     // catch(error){
     //   print(error);
     // }
+    
     if (isWeb || foundation.kIsWeb) {
       try {
         GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
@@ -100,5 +117,13 @@ class _HomepageState extends State<Homepage> {
 //   // Handle other platforms (if applicable)
 // }
 
+  }
+
+  void _handleLogout() async {
+    try {
+      await _auth.signOut();
+    } catch (error) {
+      print(error);
+    }
   }
 }
