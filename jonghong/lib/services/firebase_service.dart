@@ -26,6 +26,7 @@ class FirebaseService {
       'email': user.email,
       'name': user.displayName,
       'photoURL': user.photoURL,
+      
     });
   }
   Future<Map<String, dynamic>> getUserData(String uid) async {
