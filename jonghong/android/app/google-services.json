@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "64418403049",
+    "project_id": "jonghong-ee508",
+    "storage_bucket": "jonghong-ee508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64418403049:android:2d7b749e463fe876a19678",
+        "android_client_info": {
+          "package_name": "com.example.jonghong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64418403049-m9rml0vpspp37j3hi6ilpjm79j7utftp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3rejIdnyF9I0Ywj13buBIaseDe8CL2Hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64418403049-m9rml0vpspp37j3hi6ilpjm79j7utftp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "64418403049-0dl4rd10g9abf7q50rcamoahq0vqii1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jonghong"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
