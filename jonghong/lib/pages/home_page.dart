@@ -101,10 +101,15 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _handleLogout() async {
-    try {
-      await _auth.signOut();
-    } catch (error) {
-      print(error);
-    }
+  try {
+    // Sign out the user
+    await FirebaseAuth.instance.signOut();
+
+  } catch (error) {
+    print(error);
   }
+}
+
+
+
 }
