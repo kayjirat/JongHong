@@ -39,6 +39,8 @@ dependencies:
   sign_in_button: ^3.2.0
   firebase_core_web: ^2.16.0
   cloud_firestore: ^4.17.2
+  google_sign_in: ^5.0.2
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +62,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/room1.jpeg
+    - assets/room2.jpeg
+    - assets/room3.jpeg
+    - assets/room4.jpeg
+    - assets/images/playPhone.png
+    - assets/images/whiteLogo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

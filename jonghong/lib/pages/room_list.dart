@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jonghong/models/room.dart';
 import 'package:jonghong/pages/profile_page.dart';
+import 'package:jonghong/pages/reserve_page.dart';
 import 'package:jonghong/services/firestore_service.dart';
 
 class RoomListPage extends StatelessWidget {
   final User user;
   RoomListPage({super.key, required this.user});
   final Firestoreservice _firestoreService = Firestoreservice();
-  String imgUrl = 'https://drive.google.com/uc?export=view&id=';
+  //String imgUrl = 'https://drive.google.com/uc?export=view&id=';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,35 +72,23 @@ class RoomListPage extends StatelessWidget {
                                     Text(
                                         '${room.location}, King Mongkut Annivesary 190 years'),
                                   ]),
-                              leading: Image.network(
-                                imgUrl + room.image,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  }
-                                },
-                                errorBuilder: (BuildContext context,
-                                    Object exception, StackTrace? stackTrace) {
-                                  print('Failed to load image: $exception');
-                                  return const Text(
-                                      'Failed to load image'); // Display an error message if image loading fails
+                              leading: Image.asset(
+                                'assets/${room.image}.jpeg',
+                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  return const Text('Failed to load image'); 
                                 },
                               ),
+                              trailing: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ReservePage(roomId: room.roomId, uid: user.uid),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Book'),
+                              )
                             );
                           }).toList(),
                         );
