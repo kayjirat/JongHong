@@ -26,6 +26,7 @@ class FirebaseService {
       'email': user.email,
       'name': user.displayName,
       'photoURL': user.photoURL,
+      'phone': user.phoneNumber
       
     });
   }

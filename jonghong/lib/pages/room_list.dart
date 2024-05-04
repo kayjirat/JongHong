@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jonghong/models/room.dart';
-import 'package:jonghong/services/firestore_service.dart';  
+import 'package:jonghong/pages/profile_page.dart';
+import 'package:jonghong/services/firestore_service.dart';
 
 class RoomListPage extends StatelessWidget {
   final User user;
@@ -24,22 +26,26 @@ class RoomListPage extends StatelessWidget {
                 //Text('Your email: ${user.email}'),
                 Image.network(
                   user.photoURL!,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
                     if (loadingProgress == null) {
                       return child;
                     } else {
                       return Center(
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       );
                     }
                   },
-                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
                     print('Failed to load image: $exception');
-                    return const Text('Failed to load image'); // Display an error message if image loading fails
+                    return const Text(
+                        'Failed to load image'); // Display an error message if image loading fails
                   },
                 ),
                 FutureBuilder<List<Room>>(
@@ -58,31 +64,40 @@ class RoomListPage extends StatelessWidget {
                             return ListTile(
                               title: Text(room.roomName),
                               subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('For ${room.capacity} people'),
-                                  Text('${room.size.toString()} sq.m'),
-                                  Text('${room.location}, King Mongkut Annivesary 190 years'),
-                                ]
-                              ),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('For ${room.capacity} people'),
+                                    Text('${room.size.toString()} sq.m'),
+                                    Text(
+                                        '${room.location}, King Mongkut Annivesary 190 years'),
+                                  ]),
                               leading: Image.network(
-                               imgUrl+room.image,
-                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                imgUrl + room.image,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
                                   if (loadingProgress == null) {
                                     return child;
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
                                             : null,
                                       ),
                                     );
                                   }
                                 },
-                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
                                   print('Failed to load image: $exception');
-                                  return const Text('Failed to load image'); // Display an error message if image loading fails
+                                  return const Text(
+                                      'Failed to load image'); // Display an error message if image loading fails
                                 },
                               ),
                             );
@@ -93,6 +108,22 @@ class RoomListPage extends StatelessWidget {
                   },
                 ),
               ],
+            ),
+            SizedBox(height: 20), // Add some spacing
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to the new page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                        user: user,
+                        db: FirebaseFirestore
+                            .instance), // Instantiate the new page
+                  ),
+                );
+              },
+              child: Text('Go to New Page'), // Text for the button
             ),
           ],
         ),
