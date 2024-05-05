@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,5 +34,10 @@ class FirebaseService {
   Future<Map<String, dynamic>> getUserData(String uid) async {
     DocumentSnapshot userSnapshot = await _firestore.collection('users').doc(uid).get();
     return userSnapshot.data() as Map<String, dynamic>;
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+    await GoogleSignIn().signOut();
   }
 }

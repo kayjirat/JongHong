@@ -93,7 +93,7 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 20), // Add some spacing
             ElevatedButton(
               onPressed: () {
-                // Navigate to the new page
+                // Navigate to the new page 
                 Navigator.push(
                   context,
                   MaterialPageRoute(

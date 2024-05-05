@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jonghong/components/logOutButton.dart';
+import 'package:jonghong/components/roomListCard.dart';
+//import 'package:jonghong/controller/user_controller.dart';
 import 'package:jonghong/models/room.dart';
 import 'package:jonghong/pages/profile_page.dart';
 import 'package:jonghong/pages/reserve_page.dart';
@@ -8,114 +11,181 @@ import 'package:jonghong/services/firestore_service.dart';
 
 class RoomListPage extends StatelessWidget {
   final User user;
-  RoomListPage({super.key, required this.user});
+  RoomListPage({Key? key, required this.user});
   final Firestoreservice _firestoreService = Firestoreservice();
-  //String imgUrl = 'https://drive.google.com/uc?export=view&id=';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Welcome'),
-      // ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Stack(
           children: [
-            Column(
-              children: [
-                Text('Hi, ${user.displayName ?? 'User'}'),
-                //Text('Your email: ${user.email}'),
-                Image.network(
-                  user.photoURL!,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    }
-                  },
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
-                    print('Failed to load image: $exception');
-                    return const Text(
-                        'Failed to load image'); // Display an error message if image loading fails
-                  },
-                ),
-                FutureBuilder<List<Room>>(
-                  future: _firestoreService.getRooms(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      if (snapshot.hasError) {
-                        return const Text('Failed to load rooms');
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Text('No rooms found');
-                      } else {
-                        return Column(
-                          children: snapshot.data!.map((room) {
-                            return ListTile(
-                              title: Text(room.roomName),
-                              subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('For ${room.capacity} people'),
-                                    Text('${room.size.toString()} sq.m'),
-                                    Text(
-                                        '${room.location}, King Mongkut Annivesary 190 years'),
-                                  ]),
-                              leading: Image.asset(
-                                'assets/${room.image}.jpeg',
-                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                  return const Text('Failed to load image'); 
-                                },
-                              ),
-                              trailing: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ReservePage(roomId: room.roomId, uid: user.uid),
-                                    ),
-                                  );
-                                },
-                                child: const Text('Book'),
-                              )
-                            );
-                          }).toList(),
-                        );
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 20), // Add some spacing
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the new page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-                        user: user,
-                        db: FirebaseFirestore
-                            .instance), // Instantiate the new page
+            // Background gradient
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFF8F4C),
+                      Color(0xFFFE5B3D),
+                      Color(0xFFFE3231),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 0.19, 1.0],
                   ),
-                );
-              },
-              child: Text('Go to New Page'), // Text for the button
+                ),
+              ),
+            ),
+            // Log out button
+              Padding(
+              padding: const EdgeInsets.only(top: 25.0, left: 280),
+              child: TextButton(
+                onPressed: () {
+                  // Log out functionality
+                  LogoutButton();
+                },
+                child: const LogoutButton(),
+              ),
+            ),
+            // Whitebox
+            Padding(
+              padding: const EdgeInsets.only(top: 180.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+              ),
+            ),
+            // Profile picture with outline
+            Padding(
+              padding: const EdgeInsets.only(top: 100.0),
+              child: Center(
+                child: Column(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          // Outline width
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color.fromARGB(
+                                255, 0, 0, 0), // Outline color
+                          ),
+                          child: CircleAvatar(
+                            radius: 80,
+                            backgroundColor: Colors.transparent,
+                            // Set transparent background for the avatar
+                            backgroundImage: NetworkImage(
+                              user.photoURL ??
+                                  'https://example.com/placeholder.jpg',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 21),
+                          child: Text(
+                            "Hi, ${user.displayName ?? 'Guest'}",
+                            style: TextStyle(
+                              fontFamily: 'poppins',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              foreground: Paint()
+                                ..shader = const LinearGradient(
+                                  colors: [
+                                    Color(0xFFFF8F4C),
+                                    Color(0xFFFE5B3D),
+                                    Color(0xFFFE3231),
+                                  ],
+                                ).createShader(Rect.fromLTWH(
+                                    0.0, 0.0, 200.0, 70.0)),
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          'Any room you want?',
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        FutureBuilder<List<Room>>(
+                          future: _firestoreService.getRooms(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else {
+                              if (snapshot.hasError) {
+                                return const Text('Failed to load rooms');
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return const Text('No rooms found');
+                              } else {
+                                return Column(
+                                  children: snapshot.data!.map((room) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 20.0, right: 20, left: 20),
+                                      child: RoomCard(
+                                        roomName: room.roomName,
+                                        roomImage: room.image,
+                                        capacity: room.capacity,
+                                        detail: room.detail,
+                                        location: room.location,
+                                        roomId: room.roomId,
+                                        size: room.size,
+                                        onPressed: () {
+                                          // Add onPressed functionality if needed
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReservePage(
+                                                      roomId: room.roomId,
+                                                      uid: user.uid),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(
+                  user: user,
+                  db: FirebaseFirestore
+                      .instance), // Instantiate the new page
+            ),
+          );
+        },
+        child: Icon(Icons.person),
       ),
     );
   }

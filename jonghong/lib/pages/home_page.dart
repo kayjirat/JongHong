@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_button/sign_in_button.dart';
+//import 'package:sign_in_button/sign_in_button.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:jonghong/services/firebase_service.dart';
 import 'package:jonghong/pages/room_list.dart';
@@ -24,65 +24,65 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
+  //User? _user;
 
-  Widget _googleSignInButton() {
-    return Center(
-        child: SizedBox(
-      height: 50,
-      child: SignInButton(
-        Buttons.google,
-        text: "Sign up with Google",
-        onPressed: _handleGoogleSignIn,
-      ),
-    ));
-  }
+  // Widget _googleSignInButton() {
+  //   return Center(
+  //       child: SizedBox(
+  //     height: 50,
+  //     child: SignInButton(
+  //       Buttons.google,
+  //       text: "Sign up with Google",
+  //       onPressed: _handleGoogleSignIn,
+  //     ),
+  //   ));
+  // }
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-Future<void> _handleGoogleSignIn() async {
+// Future<void> _handleGoogleSignIn() async {
 
-  try {
-    UserCredential userCredential;
-    if (isWeb || foundation.kIsWeb){
-      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      userCredential = await _auth.signInWithPopup(googleProvider);
-    }
-    else{
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      print('Google Sign-In was cancelled or failed.');
-      return; 
-    }
+//   try {
+//     UserCredential userCredential;
+//     if (isWeb || foundation.kIsWeb){
+//       final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+//       userCredential = await _auth.signInWithPopup(googleProvider);
+//     }
+//     else{
+//     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+//     if (googleUser == null) {
+//       print('Google Sign-In was cancelled or failed.');
+//       return; 
+//     }
 
-    final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+//     final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
 
-    if (googleAuth == null) {
-      print('Google authentication data is not available.');
-      return; 
-    }
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-      accessToken: googleAuth.accessToken,
-    );
-      userCredential = await auth.signInWithCredential(credential);
-    }
+//     if (googleAuth == null) {
+//       print('Google authentication data is not available.');
+//       return; 
+//     }
+//     final FirebaseAuth auth = FirebaseAuth.instance;
+//     final AuthCredential credential = GoogleAuthProvider.credential(
+//       idToken: googleAuth.idToken,
+//       accessToken: googleAuth.accessToken,
+//     );
+//       userCredential = await auth.signInWithCredential(credential);
+//     }
     
-    await FirebaseService().checkOrCreateUser(userCredential.user!);
+//     await FirebaseService().checkOrCreateUser(userCredential.user!);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RoomListPage(user: userCredential.user!),
-      ),
-    );
-  } catch (e) {
-    print('Error during Google Sign-In: $e');
-  }
-}
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => RoomListPage(user: userCredential.user!),
+//       ),
+//     );
+//   } catch (e) {
+//     print('Error during Google Sign-In: $e');
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
