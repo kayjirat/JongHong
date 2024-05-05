@@ -47,31 +47,37 @@ class ReservePageState extends State<ReservePage> {
       });
     });
   }
-    
+
   Future<bool> isRoomAvailable(
       String roomId, DateTime date, String timeSlot) async {
     ReservationService reservationService = ReservationService();
     return await reservationService.isRoomAvailable(roomId, date, timeSlot);
   }
 
-  Future<void> reserveRoom(
-      String roomId, String uid, DateTime date, String timeSlot, String purpose) async {
+  Future<void> reserveRoom(String roomId, String uid, DateTime date,
+      String timeSlot, String purpose) async {
     ReservationService reservationService = ReservationService();
-    final success =
-        await reservationService.reserveRoom(uid, roomId, date, timeSlot, purpose);
+    final success = await reservationService.reserveRoom(
+        uid, roomId, date, timeSlot, purpose);
     if (success != 'could not reserve room') {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('Reserve Success'),
-            content: Text('Room: ${room.roomName}\nTime Slot: $timeSlot'),
+            content: Text(
+                'Room: ${room.roomName}\nDate: ${selectedDate!.toString().substring(0, 10)}\nTime Slot: ${timeSlot}'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(Colors.orange.shade900),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                ),
                 child: const Text('OK'),
               ),
             ],
@@ -98,183 +104,477 @@ class ReservePageState extends State<ReservePage> {
       );
     }
   }
+
   Future<bool> checkLimit(String uid, DateTime reserveDate) async {
     ReservationService reservationService = ReservationService();
     final limit = await reservationService.checkLimit(uid, reserveDate);
     return limit;
   }
+
   Future<void> addLimit(String uid, DateTime reserveDate) async {
     ReservationService reservationService = ReservationService();
     await reservationService.addLimit(uid, reserveDate);
   }
 
+//HERE
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reserve Page'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Image(
-              image: AssetImage('assets/${room.image}.jpeg'),
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Text('Failed to load image');
-              },
+      body: SingleChildScrollView(
+        child: Stack(children: [
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Color.fromARGB(255, 255, 111, 0),
             ),
-            Text('Room Name: ${room.roomName}'),
-            Text('Room ID: ${room.roomId}'),
-            Text('Capacity: ${room.capacity}'),
-            Text('Location: ${room.location}'),
-            Text('Size: ${room.size}'),
-            Text('Detail: ${room.detail}'),
-            const Text('Select Date and Time Slot'),
-            ElevatedButton(
-              onPressed: () async {
-                final DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                );
-
-                if (pickedDate != null && pickedDate != selectedDate) {
-                  setState(() {
-                    selectedDate = pickedDate;
-                  });
-                }
-              },
-              child: Text(selectedDate == null
-                  ? 'Pick a Date'
-                  : 'Date: ${selectedDate!.toString().substring(0, 10)}'),
-            ),
-            const Text('Select Time Slot'),
-            Wrap(
-              spacing: 10.0,
-              runSpacing: 10.0,
-              children: timeSlot.map((String timeSlot) {
-                return ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedTimeSlot = timeSlot;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedTimeSlot == timeSlot
-                        ? const Color.fromARGB(255, 255, 101, 40)
-                        : const Color.fromARGB(255, 255, 251, 251),
-                  ),
-                  child: Text(timeSlot),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Purpose: ',
-                border: OutlineInputBorder(),
+            child: ClipRRect(
+              child: Image.asset(
+                'assets/${room.image}.jpeg',
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Text('Failed to load image');
+                },
               ),
-              onChanged: (value) {
-                purpose = value;
-              },
             ),
-            ElevatedButton(
-              onPressed: () async {
-                if (selectedTimeSlot.isNotEmpty) {
-                  final date = selectedDate!;
-                  bool available = await isRoomAvailable(
-                      room.roomId, date, selectedTimeSlot);
-                  if (available && selectedDate != null) {
-                    int endHour = int.parse(selectedTimeSlot.split('-')[1].substring(0, 2));
-                    if (date.isAfter(DateTime.now()) ||
-                        (date.day == DateTime.now().day && endHour > DateTime.now().hour)) {
-                          if (await checkLimit(widget.uid, date)) {
-                            addLimit(widget.uid, date);
-                            reserveRoom(room.roomId, widget.uid, date, selectedTimeSlot, purpose);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Reserve Error'),
-                                  content: const Text('You can reserve only 2 times per day'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Reserve Error'),
-                            content: const Text('Please select date'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('OK'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 300.0),
+            child: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFFF54900),
+                  ),
+                  onPressed: () {
+                    // Implement navigation back logic here
+                    // For example:
+                    Navigator.of(context).pop();
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 265),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Room Name: ${room.roomName}',
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFE5B3D),
+                        ),
+                      ),
+                      const SizedBox(height: 18.0),
+                      Row(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.people,
+                                color: Colors.grey[700],
+                              ),
+                              const SizedBox(width: 3.0),
+                              Text(
+                                'For ${room.capacity} people',
+                                style: const TextStyle(
+                                    fontSize: 12.0,
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF9D9D9D)),
                               ),
                             ],
-                          );
-                        },
-                      );
-                    }
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Reserve Error'),
-                          content: const Text('Room is not available'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                } else {
-                  // Show select time slot dialog
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Reserve Error'),
-                        content: const Text('Please select time slot'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('OK'),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.aspect_ratio,
+                                color: Colors.grey[700],
+                              ),
+                              const SizedBox(width: 3.0),
+                              Text(
+                                '${room.size} sq.m',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF9D9D9D),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 8.0),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.grey[700],
+                              ),
+                              const SizedBox(width: 3.0),
+                              Text(
+                                '${room.location}',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF9D9D9D),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: const Text('Reserve'),
+                      ),
+                      const SizedBox(height: 18.0),
+                      const Text(
+                        'Details:',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                      Text(
+                        '${room.detail}',
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Row(
+                  children: [
+                    const Text(
+                      'Select Date:',
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFFE5B3D)),
+                    ),
+                    const SizedBox(width: 10.0),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 251, 251),
+                        side: const BorderSide(color: Color(0xFF9D9D9D)),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 12.0),
+                      ),
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)),
+                        );
+
+                        if (pickedDate != null && pickedDate != selectedDate) {
+                          setState(() {
+                            selectedDate = pickedDate;
+                          });
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            selectedDate == null
+                                ? 'dd/mm/yyyy'
+                                : '${selectedDate!.toString().substring(0, 10)}',
+                            style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFFFE5B3D)),
+                          ),
+                          const SizedBox(width: 4.0),
+                          const Icon(Icons.arrow_drop_down,
+                              color: Colors.grey), // Add icon here
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Select Duration:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFFE5B3D),
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: Wrap(
+                        spacing: 10.0,
+                        runSpacing: 10.0,
+                        children: timeSlot.map((String timeSlot) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedTimeSlot = timeSlot;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: selectedTimeSlot == timeSlot
+                                  ? const Color.fromARGB(255, 255, 101, 40)
+                                  : const Color.fromARGB(255, 255, 251, 251),
+                              side: const BorderSide(color: Color(0xFF9D9D9D)),
+                            ),
+                            child: Text(
+                              timeSlot,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: selectedTimeSlot == timeSlot
+                                    ? const Color.fromARGB(255, 255, 251, 251)
+                                    : const Color.fromARGB(255, 255, 101, 40),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                const Text(
+                  'Caution: 2 hrs. max per reservation',
+                  style: TextStyle(
+                      fontSize: 12.0,
+                      fontFamily: 'Poppins',
+                      color: Color(0xFFFE5B3D)),
+                ),
+                const Text(
+                  'Purpose:',
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFFE5B3D)),
+                ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    hintText: 'Please type your purpose of using',
+                    hintStyle: TextStyle(
+                      fontSize: 12.0,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey[500],
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    purpose = value;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Adjust as needed
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.4, // Adjust width as needed
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.green, // Set background color to green
+                            minimumSize: const Size(
+                                double.infinity, 50), // Set minimum size
+                          ),
+                          child: const Text(
+                            'Book',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold, // Make text bold
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (selectedTimeSlot.isNotEmpty) {
+                              final date = selectedDate!;
+                              bool available = await isRoomAvailable(
+                                  room.roomId, date, selectedTimeSlot);
+                              if (available && selectedDate != null) {
+                                int endHour = int.parse(selectedTimeSlot
+                                    .split('-')[1]
+                                    .substring(0, 2));
+                                if (date.isAfter(DateTime.now()) ||
+                                    (date.day == DateTime.now().day &&
+                                        endHour > DateTime.now().hour)) {
+                                  if (await checkLimit(widget.uid, date)) {
+                                    // Show confirmation dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Confirm reserved room?'),
+                                          content: const Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    WidgetStateProperty.all<
+                                                            Color>(
+                                                        Colors.grey.shade300),
+                                                foregroundColor:
+                                                    WidgetStateProperty.all<
+                                                        Color>(Colors.black),
+                                              ),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close confirmation dialog
+                                                // Reserve room
+                                                addLimit(widget.uid, date);
+                                                reserveRoom(
+                                                    room.roomId,
+                                                    widget.uid,
+                                                    date,
+                                                    selectedTimeSlot,
+                                                    purpose);
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    WidgetStateProperty.all<
+                                                            Color>(
+                                                        Colors.orange.shade900),
+                                                foregroundColor:
+                                                    WidgetStateProperty.all<
+                                                        Color>(Colors.white),
+                                              ),
+                                              child: const Text('Confirm'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Reserve Error'),
+                                          content: const Text(
+                                              'You can reserve only 2 times per day'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Reserve Error'),
+                                        content: const Text(
+                                            'Please select a future date and time'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Reserve Error'),
+                                      content:
+                                          const Text('Room is not available'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            } else {
+                              // Show select time slot dialog
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Reserve Error'),
+                                    content:
+                                        const Text('Please select a time slot'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ]),
+              ],
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
