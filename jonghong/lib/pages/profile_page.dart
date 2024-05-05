@@ -18,7 +18,6 @@ class ProfilePage extends StatelessWidget {
   try {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
-    // Perform any other sign-out related operations here
   } catch (e) {
     print(e);
   }

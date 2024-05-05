@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class EditProfilePage extends StatefulWidget {
   final User user;
   final FirebaseFirestore db;
-
   const EditProfilePage({Key? key, required this.user, required this.db}) : super(key: key);
 
   @override

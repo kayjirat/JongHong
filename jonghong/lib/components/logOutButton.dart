@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jonghong/pages/home_page.dart';
-import 'package:jonghong/services/firebase_service.dart';
 
-class LogoutButton extends StatefulWidget {
-  @override
-  State<LogoutButton> createState() => _LogoutButtonState();
-}
+class LogoutButton extends StatelessWidget {
+  const LogoutButton({Key? key}) : super(key: key);
 
-class _LogoutButtonState extends State<LogoutButton> {
-  FirebaseService firebaseService = FirebaseService();
-  Future logout() async {
-    print ('Log Out');
-    await firebaseService.signOut();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const Homepage(),
-      ),
-    );
-  }
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        _showConfirmationDialog();
+        _showConfirmationDialog(context);
       },
-      child:
-      const Text(
+      child: const Text(
         'Log Out',
         style: TextStyle(
           decoration: TextDecoration.underline,
@@ -39,11 +26,10 @@ class _LogoutButtonState extends State<LogoutButton> {
     );
   }
 
-  Future<void> _showConfirmationDialog() async {
+  Future<void> _showConfirmationDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible:
-          false, // Prevent dialog from closing on tap outside
+      barrierDismissible: false, // Prevent dialog from closing on tap outside
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(
@@ -60,9 +46,20 @@ class _LogoutButtonState extends State<LogoutButton> {
             ),
             TextButton(
               onPressed: () async {
-                MaterialPageRoute(builder: (context) => const Homepage());
-                print ('Log Out');
-                await logout();
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  await _handleGoogleSignOut(context);
+
+                  // After signing out, navigate back to the login screen or any other desired screen
+                  // For example, you can navigate back to the home screen
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Homepage()),
+                    (Route<dynamic> route) => false,
+                  );
+                } catch (e) {
+                  print('Error signing out: $e');
+                }
               },
               child: const Text('Log Out'),
             ),
@@ -70,5 +67,15 @@ class _LogoutButtonState extends State<LogoutButton> {
         );
       },
     );
+  }
+
+  Future<void> _handleGoogleSignOut(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      // Perform any other sign-out related operations here
+    } catch (e) {
+      print(e);
+    }
   }
 }
