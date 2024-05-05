@@ -75,8 +75,9 @@ class ReservePageState extends State<ReservePage> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.orange.shade900),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                      MaterialStateProperty.all<Color>(Colors.orange.shade900),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 child: const Text('OK'),
               ),
@@ -449,11 +450,11 @@ class ReservePageState extends State<ReservePage> {
                                               },
                                               style: ButtonStyle(
                                                 backgroundColor:
-                                                    WidgetStateProperty.all<
+                                                    MaterialStateProperty.all<
                                                             Color>(
                                                         Colors.grey.shade300),
                                                 foregroundColor:
-                                                    WidgetStateProperty.all<
+                                                    MaterialStateProperty.all<
                                                         Color>(Colors.black),
                                               ),
                                               child: const Text('Cancel'),
@@ -473,11 +474,11 @@ class ReservePageState extends State<ReservePage> {
                                               },
                                               style: ButtonStyle(
                                                 backgroundColor:
-                                                    WidgetStateProperty.all<
+                                                    MaterialStateProperty.all<
                                                             Color>(
                                                         Colors.orange.shade900),
                                                 foregroundColor:
-                                                    WidgetStateProperty.all<
+                                                    MaterialStateProperty.all<
                                                         Color>(Colors.white),
                                               ),
                                               child: const Text('Confirm'),
