@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,7 +56,7 @@ class LogoutButton extends StatelessWidget {
                   // For example, you can navigate back to the home screen
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => Homepage()),
+                    MaterialPageRoute(builder: (context) => const Homepage()),
                     (Route<dynamic> route) => false,
                   );
                 } catch (e) {

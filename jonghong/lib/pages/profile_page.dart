@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jonghong/pages/editprofile_page.dart';
 import 'package:jonghong/pages/home_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
   final User user;
@@ -27,7 +29,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         actions: [
           IconButton(
             onPressed: () async {
@@ -40,14 +42,14 @@ class ProfilePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Homepage(),
+                    builder: (context) => const Homepage(),
                   ),
                 );
               } catch (e) {
                 print('Error signing out: $e');
               }
             },
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
@@ -61,12 +63,12 @@ class ProfilePage extends StatelessWidget {
                   radius: 50, // Adjust the radius as needed
                   backgroundImage: NetworkImage(user.photoURL!),
                 ),
-                Text('${user.displayName ?? 'User'}'),
+                Text(user.displayName ?? 'User'),
                 StreamBuilder<DocumentSnapshot>(
                   stream: db.collection('users').doc(user.uid).snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return CircularProgressIndicator(); // Show loading indicator while fetching data
+                      return const CircularProgressIndicator(); // Show loading indicator while fetching data
                     }
                     var userData = snapshot.data!.data() as Map<String, dynamic>; // Explicit cast to Map<String, dynamic>
                     String phoneNumber = userData['phone'] ?? 'Phone number not available';
@@ -78,18 +80,18 @@ class ProfilePage extends StatelessWidget {
                   stream: db.collection('users').doc(user.uid).snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return CircularProgressIndicator(); // Show loading indicator while fetching data
+                      return const CircularProgressIndicator(); // Show loading indicator while fetching data
                     }
                     var userData = snapshot.data!.data() as Map<String,
                         dynamic>; // Explicit cast to Map<String, dynamic
                     String address = userData['address'] ?? 'KMUTT';
-                    return Text('Address: ${address}');
+                    return Text('Address: $address');
                   },
                 ),
                 Text('Email: ${user.email}'),
               ],
             ),
-            SizedBox(height: 20), // Add some spacing
+            const SizedBox(height: 20), // Add some spacing
             ElevatedButton(
               onPressed: () {
                 // Navigate to the new page 
@@ -103,7 +105,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Edit Profile'), // Text for the button
+              child: const Text('Edit Profile'), // Text for the button
             ),
           ],
         ),

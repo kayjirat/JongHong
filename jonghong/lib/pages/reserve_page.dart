@@ -66,7 +66,7 @@ class ReservePageState extends State<ReservePage> {
           return AlertDialog(
             title: const Text('Reserve Success'),
             content: Text(
-                'Room: ${room.roomName}\nDate: ${selectedDate!.toString().substring(0, 10)}\nTime Slot: ${timeSlot}'),
+                'Room: ${room.roomName}\nDate: ${selectedDate!.toString().substring(0, 10)}\nTime Slot: $timeSlot'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -128,7 +128,7 @@ class ReservePageState extends State<ReservePage> {
             height: MediaQuery.of(context).size.height * 0.4,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
-              color: Color.fromARGB(255, 255, 111, 0),
+              color: const Color.fromARGB(255, 255, 111, 0),
             ),
             child: ClipRRect(
               child: Image.asset(
@@ -231,7 +231,7 @@ class ReservePageState extends State<ReservePage> {
                               ),
                               const SizedBox(width: 3.0),
                               Text(
-                                '${room.location}',
+                                room.location,
                                 style: const TextStyle(
                                   fontSize: 12.0,
                                   fontFamily: 'Poppins',
@@ -251,7 +251,7 @@ class ReservePageState extends State<ReservePage> {
                         ),
                       ),
                       Text(
-                        '${room.detail}',
+                        room.detail,
                         style: const TextStyle(
                           fontSize: 12.0,
                           fontFamily: 'Poppins',
@@ -300,7 +300,7 @@ class ReservePageState extends State<ReservePage> {
                           Text(
                             selectedDate == null
                                 ? 'dd/mm/yyyy'
-                                : '${selectedDate!.toString().substring(0, 10)}',
+                                : selectedDate!.toString().substring(0, 10),
                             style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Color(0xFFFE5B3D)),

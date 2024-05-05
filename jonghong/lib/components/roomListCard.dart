@@ -1,7 +1,7 @@
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart';
 
 class RoomCard extends StatelessWidget {
   final String roomName;
@@ -14,6 +14,7 @@ class RoomCard extends StatelessWidget {
   final VoidCallback onPressed;
 
   const RoomCard({
+    super.key,
     required this.roomName,
     required this.roomImage,
     required this.capacity,
@@ -29,7 +30,7 @@ class RoomCard extends StatelessWidget {
     // Calculate device screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
+    return SizedBox(
       width: screenWidth, // Set width of the card
       child: Card(
         color: Colors.white,
@@ -70,7 +71,7 @@ class RoomCard extends StatelessWidget {
                         color: Color(0xFFFE3231),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -138,26 +139,26 @@ class RoomCard extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             child: ElevatedButton(
                               onPressed: onPressed,
-                              child: const Text(
-                                'Book',
-                                style: TextStyle(
-                                  fontFamily: 'poppins',
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
                               style: ButtonStyle(
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.white),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        Color(0xFF26BB73)),
+                                        const Color(0xFF26BB73)),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40),
                                   ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Book',
+                                style: TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),

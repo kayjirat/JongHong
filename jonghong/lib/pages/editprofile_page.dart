@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,7 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -63,23 +65,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
               radius: 50,
               backgroundImage: NetworkImage(widget.user.photoURL!),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(widget.user.displayName ?? 'User Name'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Phone Number'),
+              decoration: const InputDecoration(labelText: 'Phone Number'),
             ),
             TextFormField(
               controller: _addressController,
-              decoration: InputDecoration(labelText: 'Address'),
+              decoration: const InputDecoration(labelText: 'Address'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 await _updateProfile();
               },
-              child: Text('Save Changes'),
+              child: const Text('Save Changes'),
             ),
           ],
         ),
@@ -94,7 +96,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   // Check if phone number and address are filled
   if (phoneNumber.isEmpty || address.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please fill in all fields.')),
+      const SnackBar(content: Text('Please fill in all fields.')),
     );
     return;
   }
@@ -111,7 +113,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     // Show a success message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profile updated successfully!')),
+      const SnackBar(content: Text('Profile updated successfully!')),
     );
 
     // Navigate back to the profile page

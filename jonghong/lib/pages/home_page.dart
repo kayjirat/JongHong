@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -197,11 +199,11 @@ final FirebaseAuth auth = FirebaseAuth.instance;
                     GestureDetector(
                       onTap: () async {
                         try {
-                          final _auth = FirebaseAuth.instance;
+                          final auth = FirebaseAuth.instance;
                           UserCredential userCredential;
                           if (isWeb || kIsWeb) {
                             final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-                            userCredential = await _auth.signInWithPopup(googleProvider);
+                            userCredential = await auth.signInWithPopup(googleProvider);
                           } else {
                             final GoogleSignIn googleSignIn = GoogleSignIn();
                             final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
@@ -210,7 +212,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
                               return;
                             }
 
-                            final GoogleSignInAuthentication? googleAuth =
+                            final GoogleSignInAuthentication googleAuth =
                                 await googleUser.authentication;
 
                             if (googleAuth == null) {
@@ -221,7 +223,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
                               idToken: googleAuth.idToken,
                               accessToken: googleAuth.accessToken,
                             );
-                            userCredential = await _auth.signInWithCredential(credential);
+                            userCredential = await auth.signInWithCredential(credential);
                           }
 
                           await FirebaseService().checkOrCreateUser(userCredential.user!);

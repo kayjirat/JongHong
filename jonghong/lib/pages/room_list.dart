@@ -39,11 +39,11 @@ class RoomListPage extends StatelessWidget {
               ),
             ),
             // Log out button
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                       left: 20.0, top: 33), 
                   child: LogoutButton(),
                 ),
@@ -77,7 +77,7 @@ class RoomListPage extends StatelessWidget {
                           // Outline width
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color.fromARGB(
+                            color:  Color.fromARGB(
                                 255, 0, 0, 0), // Outline color
                           ),
                           child: CircleAvatar(
@@ -106,7 +106,7 @@ class RoomListPage extends StatelessWidget {
                                     Color(0xFFFE3231),
                                   ],
                                 ).createShader(
-                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                                    const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                             ),
                           ),
                         ),
@@ -123,7 +123,7 @@ class RoomListPage extends StatelessWidget {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
                             } else {
                               if (snapshot.hasError) {
                                 return const Text('Failed to load rooms');
@@ -184,7 +184,7 @@ class RoomListPage extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.person),
+        child: const Icon(Icons.person),
       ),
     );
   }
