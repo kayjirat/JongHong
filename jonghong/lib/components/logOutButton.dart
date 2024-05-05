@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:jonghong/controller/user_controller.dart';
 import 'package:jonghong/pages/home_page.dart';
-//import 'package:jonghong/pages/loginPage.dart';
+import 'package:jonghong/services/firebase_service.dart';
 
 class LogoutButton extends StatefulWidget {
   @override
@@ -9,8 +8,10 @@ class LogoutButton extends StatefulWidget {
 }
 
 class _LogoutButtonState extends State<LogoutButton> {
+  FirebaseService firebaseService = FirebaseService();
   Future logout() async {
-    //await UserController.signOut();
+    print ('Log Out');
+    await firebaseService.signOut();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const Homepage(),
@@ -23,7 +24,8 @@ class _LogoutButtonState extends State<LogoutButton> {
       onPressed: () {
         _showConfirmationDialog();
       },
-      child: const Text(
+      child:
+      const Text(
         'Log Out',
         style: TextStyle(
           decoration: TextDecoration.underline,
@@ -58,7 +60,9 @@ class _LogoutButtonState extends State<LogoutButton> {
             ),
             TextButton(
               onPressed: () async {
-                
+                MaterialPageRoute(builder: (context) => const Homepage());
+                print ('Log Out');
+                await logout();
               },
               child: const Text('Log Out'),
             ),

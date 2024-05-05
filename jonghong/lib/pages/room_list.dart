@@ -39,16 +39,17 @@ class RoomListPage extends StatelessWidget {
               ),
             ),
             // Log out button
-              Padding(
-              padding: const EdgeInsets.only(top: 25.0, left: 280),
-              child: TextButton(
-                onPressed: () {
-                  // Log out functionality
-                  LogoutButton();
-                },
-                child: const LogoutButton(),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20.0, top: 33), 
+                  child: LogoutButton(),
+                ),
+              ],
             ),
+
             // Whitebox
             Padding(
               padding: const EdgeInsets.only(top: 180.0),
@@ -104,8 +105,8 @@ class RoomListPage extends StatelessWidget {
                                     Color(0xFFFE5B3D),
                                     Color(0xFFFE3231),
                                   ],
-                                ).createShader(Rect.fromLTWH(
-                                    0.0, 0.0, 200.0, 70.0)),
+                                ).createShader(
+                                    Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                             ),
                           ),
                         ),
@@ -148,10 +149,9 @@ class RoomListPage extends StatelessWidget {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ReservePage(
-                                                      roomId: room.roomId,
-                                                      uid: user.uid),
+                                              builder: (context) => ReservePage(
+                                                  roomId: room.roomId,
+                                                  uid: user.uid),
                                             ),
                                           );
                                         },
@@ -180,8 +180,7 @@ class RoomListPage extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ProfilePage(
                   user: user,
-                  db: FirebaseFirestore
-                      .instance), // Instantiate the new page
+                  db: FirebaseFirestore.instance), // Instantiate the new page
             ),
           );
         },

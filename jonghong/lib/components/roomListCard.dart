@@ -43,7 +43,8 @@ class RoomCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Container(
-                width: screenWidth * 0.3, // Adjust image width based on screen size
+                width: screenWidth *
+                    0.3, // Adjust image width based on screen size
                 height: 150,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -130,37 +131,40 @@ class RoomCard extends StatelessWidget {
                       ],
                     ),
                     Row(
-  crossAxisAlignment: CrossAxisAlignment.end,
-  children: [
-    Expanded(
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: const Text(
-            'Book',
-            style: TextStyle(
-              fontFamily: 'poppins',
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF26BB73)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  ],
-),
-
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton(
+                              onPressed: onPressed,
+                              child: const Text(
+                                'Book',
+                                style: TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color(0xFF26BB73)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
