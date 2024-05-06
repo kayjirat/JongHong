@@ -95,7 +95,7 @@ class RoomCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
-                          Icons.meeting_room_outlined,
+                          Icons.aspect_ratio,
                           color: Color(0xFF737373),
                         ),
                         const SizedBox(width: 8),
