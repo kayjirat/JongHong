@@ -24,7 +24,7 @@ class ReservationService {
   }
 
   Future<String> reserveRoom(String uid, String roomId, DateTime reserveDate,
-      String reserveTime, String purpose) async {
+      String reserveTime) async {
     try {
       final reservationRef = await _firestore.collection('reservation').add({
         'reserveId': '',
@@ -32,7 +32,7 @@ class ReservationService {
         'uid': uid,
         'reserveDate': reserveDate.toString(),
         'reserveTime': reserveTime,
-        'purpose': purpose,
+      //  'purpose': purpose,
       });
 
       final reservationId = reservationRef.id;

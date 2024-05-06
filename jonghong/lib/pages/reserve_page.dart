@@ -54,11 +54,11 @@ class ReservePageState extends State<ReservePage> {
     return await reservationService.isRoomAvailable(roomId, date, timeSlot);
   }
 
-  Future<void> reserveRoom(String roomId, String uid, DateTime date,
-      String timeSlot, String purpose) async {
+  Future<void> reserveRoom(
+      String roomId, String uid, DateTime date, String timeSlot) async {
     ReservationService reservationService = ReservationService();
-    final success = await reservationService.reserveRoom(
-        uid, roomId, date, timeSlot, purpose);
+    final success =
+        await reservationService.reserveRoom(uid, roomId, date, timeSlot);
     if (success != 'could not reserve room') {
       showDialog(
         context: context,
@@ -156,7 +156,7 @@ class ReservePageState extends State<ReservePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.only(top: 45.0, left: 20.0, right: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -287,8 +287,20 @@ class ReservePageState extends State<ReservePage> {
                           firstDate: DateTime.now(),
                           lastDate:
                               DateTime.now().add(const Duration(days: 365)),
+                          builder: (context, child) {
+                            return Theme(
+                              data: ThemeData(
+                                brightness: Brightness
+                                    .light, // Adjust based on desired background
+                                primaryColor: Colors
+                                    .orange, // Set primary color to orange
+                                hintColor: Colors
+                                    .black, // Adjust accent color for text contrast
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
-
                         if (pickedDate != null && pickedDate != selectedDate) {
                           setState(() {
                             selectedDate = pickedDate;
@@ -334,14 +346,35 @@ class ReservePageState extends State<ReservePage> {
                         children: timeSlot.map((String timeSlot) {
                           return ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                selectedTimeSlot = timeSlot;
-                              });
+                              if (selectedDate != null) {
+                                final List<String> timeRange =
+                                    timeSlot.split('-');
+                                final endTime = DateTime(
+                                  selectedDate!.year,
+                                  selectedDate!.month,
+                                  selectedDate!.day,
+                                  int.parse(timeRange[1].split('.')[0]),
+                                  int.parse(timeRange[1].split('.')[1]),
+                                );
+                                final bool slotPassedToday =
+                                    endTime.isBefore(DateTime.now());
+                                if (!slotPassedToday &&
+                                    selectedDate!.isAfter(DateTime.now())) {
+                                  setState(() {
+                                    selectedTimeSlot = timeSlot;
+                                  });
+                                }
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: selectedTimeSlot == timeSlot
                                   ? const Color.fromARGB(255, 255, 101, 40)
-                                  : const Color.fromARGB(255, 255, 251, 251),
+                                  : (selectedDate != null &&
+                                          selectedDate!
+                                              .isBefore(DateTime.now()))
+                                      ? Colors.grey
+                                      : const Color.fromARGB(
+                                          255, 255, 251, 251),
                               side: const BorderSide(color: Color(0xFF9D9D9D)),
                             ),
                             child: Text(
@@ -350,7 +383,12 @@ class ReservePageState extends State<ReservePage> {
                                 fontFamily: 'Poppins',
                                 color: selectedTimeSlot == timeSlot
                                     ? const Color.fromARGB(255, 255, 251, 251)
-                                    : const Color.fromARGB(255, 255, 101, 40),
+                                    : (selectedDate != null &&
+                                            selectedDate!
+                                                .isBefore(DateTime.now()))
+                                        ? Colors.white
+                                        : const Color.fromARGB(
+                                            255, 255, 101, 40),
                               ),
                             ),
                           );
@@ -366,35 +404,35 @@ class ReservePageState extends State<ReservePage> {
                       fontFamily: 'Poppins',
                       color: Color(0xFFFE5B3D)),
                 ),
-                const Text(
-                  'Purpose:',
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFFE5B3D)),
-                ),
+                // const Text(
+                //   'Purpose:',
+                //   style: TextStyle(
+                //       fontSize: 16.0,
+                //       fontFamily: 'Poppins',
+                //       fontWeight: FontWeight.w600,
+                //       color: Color(0xFFFE5B3D)),
+                // ),
                 const SizedBox(height: 10.0),
-                TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    hintText: 'Please type your purpose of using',
-                    hintStyle: TextStyle(
-                      fontSize: 12.0,
-                      fontFamily: 'Poppins',
-                      color: Colors.grey[500],
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    purpose = value;
-                  },
-                ),
+                // TextFormField(
+                //   keyboardType: TextInputType.multiline,
+                //   maxLines: 4,
+                //   decoration: InputDecoration(
+                //     filled: true,
+                //     fillColor: Colors.grey[200],
+                //     hintText: 'Please type your purpose of using',
+                //     hintStyle: TextStyle(
+                //       fontSize: 12.0,
+                //       fontFamily: 'Poppins',
+                //       color: Colors.grey[500],
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(10.0),
+                //     ),
+                //   ),
+                //   onChanged: (value) {
+                //     purpose = value;
+                //   },
+                // ),
                 const SizedBox(height: 10.0),
                 Row(
                     mainAxisAlignment:
@@ -469,8 +507,8 @@ class ReservePageState extends State<ReservePage> {
                                                     room.roomId,
                                                     widget.uid,
                                                     date,
-                                                    selectedTimeSlot,
-                                                    purpose);
+                                                    selectedTimeSlot);
+                                                // purpose);
                                               },
                                               style: ButtonStyle(
                                                 backgroundColor:

@@ -44,12 +44,11 @@ class RoomListPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      left: 20.0, top: 33), 
+                      left: 20.0, top: 40), 
                   child: LogoutButton(),
                 ),
               ],
             ),
-
             // Whitebox
             Padding(
               padding: const EdgeInsets.only(top: 180.0),
@@ -74,7 +73,6 @@ class RoomListPage extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(2),
-                          // Outline width
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color:  Color.fromARGB(

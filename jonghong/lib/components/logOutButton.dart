@@ -15,7 +15,7 @@ class LogoutButton extends StatelessWidget {
         _showConfirmationDialog(context);
       },
       child: const Text(
-        'Log Out',
+        'Logout',
         style: TextStyle(
           decoration: TextDecoration.underline,
           decorationColor: Colors.white,
@@ -35,15 +35,22 @@ class LogoutButton extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(
-            'Log Out',
-            style: TextStyle(fontFamily: 'poppins', fontSize: 20),
+            'Logout',
+            style: TextStyle(fontFamily: 'poppins', fontSize: 20, fontWeight: FontWeight.w600),
+            
           ),
           content: const Text('Are you sure you want to log out?'),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.grey.shade300),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              ),
               child: const Text('Cancel'),
             ),
             TextButton(
@@ -63,6 +70,11 @@ class LogoutButton extends StatelessWidget {
                   print('Error signing out: $e');
                 }
               },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.orange.shade900),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
               child: const Text('Log Out'),
             ),
           ],

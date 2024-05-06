@@ -256,7 +256,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
                         ),
                         child: const Center(
                           child: Text(
-                            'Login by KMUTT Account',
+                            'Login',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w500,
