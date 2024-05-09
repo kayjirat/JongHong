@@ -20,7 +20,9 @@ class ReservePageState extends State<ReservePage> {
   final Firestoreservice firestoreservice = Firestoreservice();
   late Room room;
   String purpose = '';
+  //DateTime selectedDate = DateTime.now();
   DateTime? selectedDate;
+  DateTime picked = DateTime.now();
   String selectedTimeSlot = '';
   List<String> timeSlot = [
     '08.00-10.00',
@@ -115,6 +117,17 @@ class ReservePageState extends State<ReservePage> {
   Future<void> addLimit(String uid, DateTime reserveDate) async {
     ReservationService reservationService = ReservationService();
     await reservationService.addLimit(uid, reserveDate);
+  }
+
+  Future<bool> findReservedTime(
+      String roomId, DateTime date, String time) async {
+    ReservationService reservationService = ReservationService();
+    return await reservationService.findReservedTime(roomId, date, time);
+  }
+
+  Future<List<String>> notReservedTime(String roomId, DateTime date) async {
+    ReservationService reservationService = ReservationService();
+    return await reservationService.notReservedTime(roomId, date);
   }
 
 //HERE
@@ -304,6 +317,7 @@ class ReservePageState extends State<ReservePage> {
                         if (pickedDate != null && pickedDate != selectedDate) {
                           setState(() {
                             selectedDate = pickedDate;
+                            picked = pickedDate;
                           });
                         }
                       },
@@ -340,59 +354,77 @@ class ReservePageState extends State<ReservePage> {
                     ),
                     const SizedBox(width: 10.0),
                     Expanded(
-                      child: Wrap(
-                        spacing: 10.0,
-                        runSpacing: 10.0,
-                        children: timeSlot.map((String timeSlot) {
-                          return ElevatedButton(
-                            onPressed: () {
-                              if (selectedDate != null) {
-                                final List<String> timeRange =
-                                    timeSlot.split('-');
-                                final endTime = DateTime(
-                                  selectedDate!.year,
-                                  selectedDate!.month,
-                                  selectedDate!.day,
-                                  int.parse(timeRange[1].split('.')[0]),
-                                  int.parse(timeRange[1].split('.')[1]),
-                                );
-                                final bool slotPassedToday =
-                                    endTime.isBefore(DateTime.now());
-                                if (!slotPassedToday &&
-                                    selectedDate!.isAfter(DateTime.now())) {
-                                  setState(() {
-                                    selectedTimeSlot = timeSlot;
-                                  });
-                                }
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedTimeSlot == timeSlot
-                                  ? const Color.fromARGB(255, 255, 101, 40)
-                                  : (selectedDate != null &&
-                                          selectedDate!
-                                              .isBefore(DateTime.now()))
-                                      ? Colors.grey
-                                      : const Color.fromARGB(
-                                          255, 255, 251, 251),
-                              side: const BorderSide(color: Color(0xFF9D9D9D)),
-                            ),
-                            child: Text(
-                              timeSlot,
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: selectedTimeSlot == timeSlot
-                                    ? const Color.fromARGB(255, 255, 251, 251)
-                                    : (selectedDate != null &&
-                                            selectedDate!
-                                                .isBefore(DateTime.now()))
-                                        ? Colors.white
-                                        : const Color.fromARGB(
-                                            255, 255, 101, 40),
-                              ),
-                            ),
+                      child: FutureBuilder<List<String>>(
+                        future: notReservedTime(room.roomId, picked),
+                        builder: (context, snapshot) {
+                          // if (snapshot.connectionState == ConnectionState.waiting) {
+                          //   // Show loading indicator while fetching data
+                          //   return CircularProgressIndicator();
+                          // } else if (snapshot.hasError) {
+                          //   // Show error message if an error occurred
+                          //   return Text('Error: ${snapshot.error}');
+                          // } else {
+                          final List<String> noReservedTimes =
+                              snapshot.data ?? [];
+                          return Wrap(
+                            spacing: 10.0,
+                            runSpacing: 10.0,
+                            children: timeSlot.map((String timeSlot) {
+                              final bool noReserved =
+                                  noReservedTimes.contains(timeSlot);
+                              final List<String> timeRange =
+                                  timeSlot.split('-');
+                              final endTime = selectedDate != null
+                                  ? DateTime(
+                                      selectedDate!.year,
+                                      selectedDate!.month,
+                                      selectedDate!.day,
+                                      int.parse(timeRange[1].split('.')[0]),
+                                      int.parse(timeRange[1].split('.')[1]),
+                                    )
+                                  : DateTime.now();
+                              final bool slotPassedToday =
+                                  endTime.isBefore(DateTime.now());
+                              final bool canBeSelected = selectedDate != null &&
+                                  !slotPassedToday &&
+                                  noReserved;
+
+                              return ElevatedButton(
+                                onPressed: canBeSelected
+                                    ? () {
+                                        setState(() {
+                                          selectedTimeSlot = timeSlot;
+                                        });
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: selectedTimeSlot == timeSlot
+                                      ? const Color.fromARGB(255, 255, 101, 40)
+                                      : canBeSelected
+                                          ? const Color.fromARGB(
+                                              255, 255, 251, 251)
+                                          : Colors.grey,
+                                  side: const BorderSide(
+                                      color: Color(0xFF9D9D9D)),
+                                ),
+                                child: Text(
+                                  timeSlot,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: selectedTimeSlot == timeSlot
+                                        ? const Color.fromARGB(
+                                            255, 255, 251, 251)
+                                        : canBeSelected
+                                            ? const Color.fromARGB(
+                                                255, 255, 101, 40)
+                                            : Colors.white,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           );
-                        }).toList(),
+                          //}
+                        },
                       ),
                     ),
                   ],
