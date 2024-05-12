@@ -14,7 +14,6 @@ class ReservationCard extends StatelessWidget {
   final String time;
   final VoidCallback onPressed;
 
-
   const ReservationCard({
     super.key,
     required this.roomName,
@@ -28,13 +27,12 @@ class ReservationCard extends StatelessWidget {
     required this.time,
     required this.onPressed,
   });
-    
 
   @override
   Widget build(BuildContext context) {
     bool isCancelDialogShown = false;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return Center(
       child: IntrinsicWidth(
         child: Container(
@@ -57,7 +55,7 @@ class ReservationCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Container(
-                  width: screenWidth * 0.22, 
+                  width: screenWidth * 0.22,
                   height: screenWidth * 0.22,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
@@ -108,15 +106,15 @@ class ReservationCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
-                              width: screenWidth * 0.05), 
+                          SizedBox(width: screenWidth * 0.05),
                           Text(
-                            time, 
+                            time,
                             style: const TextStyle(
                               fontFamily: 'poppins',
                               fontSize: 9,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF737373), // Adjust color as needed
+                              color:
+                                  Color(0xFF737373), // Adjust color as needed
                             ),
                           ),
                         ],
@@ -130,8 +128,7 @@ class ReservationCard extends StatelessWidget {
                             color: Color(0xFF737373),
                             size: 15,
                           ),
-                          SizedBox(
-                              width: screenWidth * 0.03),
+                          SizedBox(width: screenWidth * 0.03),
                           Text(
                             '$capacity people',
                             style: const TextStyle(
@@ -141,15 +138,13 @@ class ReservationCard extends StatelessWidget {
                               color: Color(0xFF737373),
                             ),
                           ),
-                          SizedBox(
-                              width: screenWidth * 0.05),
+                          SizedBox(width: screenWidth * 0.05),
                           const Icon(
-                            Icons.meeting_room_outlined,
+                            Icons.aspect_ratio,
                             color: Color(0xFF737373),
                             size: 15,
                           ),
-                          SizedBox(
-                              width: screenWidth * 0.03),
+                          SizedBox(width: screenWidth * 0.03),
                           Text(
                             '$size sq.m',
                             style: const TextStyle(
@@ -169,8 +164,7 @@ class ReservationCard extends StatelessWidget {
                             color: Color(0xFF737373),
                             size: 15,
                           ),
-                          SizedBox(
-                              width: screenWidth * 0.03),
+                          SizedBox(width: screenWidth * 0.03),
                           Expanded(
                             child: Text(
                               location,
@@ -190,7 +184,8 @@ class ReservationCard extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               if (!isCancelDialogShown) {
-                                isCancelDialogShown = true; // Set flag to prevent multiple dialogs
+                                isCancelDialogShown =
+                                    true; // Set flag to prevent multiple dialogs
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -202,7 +197,8 @@ class ReservationCard extends StatelessWidget {
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
-                                            isCancelDialogShown = false; // Reset flag when dialog is closed
+                                            isCancelDialogShown =
+                                                false; // Reset flag when dialog is closed
                                           },
                                           child: const Text("Back"),
                                         ),
