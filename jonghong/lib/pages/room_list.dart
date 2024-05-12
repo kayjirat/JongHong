@@ -13,6 +13,7 @@ import 'package:jonghong/services/firestore_service.dart';
 
 class RoomListPage extends StatelessWidget {
   final User user;
+  RoomListPage({super.key, Key? customKey, required this.user});
   final Firestoreservice _firestoreService = Firestoreservice();
 
   @override
