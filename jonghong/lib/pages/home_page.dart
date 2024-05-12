@@ -325,54 +325,7 @@ class _HomepageState extends State<Homepage> {
                     //   ),
                     // ),
 
-                    GestureDetector(
-                      onTap: () async {
-                        try {
-                          GoogleSignInScreen();
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Homepage(),
-                            ),
-                          );
-                        } catch (e) {
-                          print('Error during Google Sign-In: $e');
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFFFF8F4C),
-                              Color(0xFFFE5B3D),
-                              Color(0xFFFE3231),
-                            ],
-                          ),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-
-
+                    
                   ],
                 ),
               ),
