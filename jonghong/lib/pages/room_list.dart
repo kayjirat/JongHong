@@ -5,13 +5,14 @@ import 'package:jonghong/components/logOutButton.dart';
 import 'package:jonghong/components/roomListCard.dart';
 //import 'package:jonghong/controller/user_controller.dart';
 import 'package:jonghong/models/room.dart';
+import 'package:jonghong/pages/feedback_page.dart';
+import 'package:jonghong/pages/my_reservation.dart';
 import 'package:jonghong/pages/profile_page.dart';
 import 'package:jonghong/pages/reserve_page.dart';
 import 'package:jonghong/services/firestore_service.dart';
 
 class RoomListPage extends StatelessWidget {
   final User user;
-  RoomListPage({Key? key, required this.user});
   final Firestoreservice _firestoreService = Firestoreservice();
 
   @override
@@ -170,7 +171,11 @@ class RoomListPage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+        FloatingActionButton(
         onPressed: () {
           // Navigate to the new page
           Navigator.push(
@@ -178,12 +183,40 @@ class RoomListPage extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ProfilePage(
                   user: user,
-                  db: FirebaseFirestore.instance), // Instantiate the new page
+                 // db: FirebaseFirestore.instance
+              ), // Instantiate the new page
             ),
           );
         },
         child: const Icon(Icons.person),
       ),
+      const SizedBox(height: 20),
+      FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyReservationPage(uid: user.uid), // Instantiate the new page
+            ),
+          );
+        },
+        child: const Icon(Icons.calendar_today),
+      ),
+      const SizedBox(height: 20),
+      FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FeedbackPage(uid: user.uid)), 
+            );
+        },
+        child: const Icon(Icons.assessment_rounded),
+      ),
+      ],
+    ),
     );
   }
 }

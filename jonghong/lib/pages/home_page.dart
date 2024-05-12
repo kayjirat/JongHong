@@ -223,11 +223,11 @@ class _HomepageState extends State<Homepage> {
                                     googleAuth =
                                     await googleUser.authentication;
 
-                                if (googleAuth == null) {
-                                  print(
-                                      'Google authentication data is not available.');
-                                  return;
-                                }
+                                // if (googleAuth == null) {
+                                //   print(
+                                //       'Google authentication data is not available.');
+                                //   return;
+                                // }
                                 final AuthCredential credential =
                                     GoogleAuthProvider.credential(
                                   idToken: googleAuth.idToken,

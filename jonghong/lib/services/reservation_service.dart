@@ -59,7 +59,7 @@ class ReservationService {
           .get();
       if (reservationSnapshot.docs.isNotEmpty) {
         int limit = reservationSnapshot.docs.first.get('limit');
-        return limit < 1;
+        return limit < 2;
       } else {
         return true;
       }
@@ -83,7 +83,7 @@ class ReservationService {
         await _firestore.collection('user_limit').add({
           'uid': uid,
           'reserveDate': reserveDate.toString(),
-          'limit': 0,
+          'limit': 1,
         });
       }
     } catch (e) {
@@ -92,7 +92,7 @@ class ReservationService {
   }
   Future <bool> findReservedTime(String roomId, DateTime date, String reserveTime) async {
     try {
-      print(reserveTime);
+      //print(reserveTime);
       QuerySnapshot reservationSnapshot = await _firestore
           .collection('reservation')
           .where('roomId', isEqualTo: roomId)
@@ -121,6 +121,63 @@ class ReservationService {
     } catch (e) {
       print('Error: $e');
       return [];
+    }
+  }
+  Future<List<Map<String, dynamic>>> getReservations(String uid) async {
+  try {
+    //print(uid);
+    final now = DateTime.now();
+    QuerySnapshot reservationSnapshot = await _firestore
+        .collection('reservation')
+        .where('uid', isEqualTo: uid)
+        .get();
+    List<Map<String, dynamic>> reservations = [];
+    for (var doc in reservationSnapshot.docs) {
+      final reserveDate = DateTime.parse(doc.get('reserveDate'));
+      final date = doc.get('reserveDate').substring(0, 10);
+      final nowdate = now.toString().substring(0, 10);
+      final reserveTime = doc.get('reserveTime');
+      final timeParts = doc.get('reserveTime').split('-'); 
+      final timeHour = int.parse(timeParts[1].split('.')[0]);
+      //final timeMin = int.parse(timeParts[1].split('.')[1]);
+      int nowHour = DateTime.now().hour;
+      //int nowMin = DateTime.now().minute;
+      //print('$nowdate, $nowHour, $nowMin');
+      //print('$date, $timeHour, $timeMin');
+      if (reserveDate.isAfter(now) || (nowdate == date && timeHour >= nowHour)) {
+        reservations.add({
+          'reserveId': doc.get('reserveId'),
+          'roomId': doc.get('roomId'),
+          'reserveDate': date,
+          'reserveTime': reserveTime,
+          'rDate': reserveDate,
+        });
+      }
+    }
+    reservations.sort((a, b) => DateTime.parse(a['reserveDate']).compareTo(DateTime.parse(b['reserveDate'])));
+    reservations.sort((a, b) => a['reserveTime'].compareTo(b['reserveTime']));
+    //print("hi: $reservations");
+    return reservations;
+  } catch (e) {
+    print('Error: $e');
+    return [];
+  }
+}
+
+  Future<void> deleteReservation(String reserveId, String uid, String reserveDate) async {
+    try {
+      print(uid);
+      await _firestore.collection('reservation').doc(reserveId).delete();
+      QuerySnapshot limitSnapshot = await _firestore
+          .collection('user_limit')
+          .where('uid', isEqualTo: uid)
+          .where('reserveDate', isEqualTo: reserveDate)
+          .get();
+      limitSnapshot.docs.first.reference.update({'limit': FieldValue.increment(-1)});
+      print('Deleted reservation with ID: $reserveId');
+      print(limitSnapshot);
+    } catch (e) {
+      print('Error: $e');
     }
   }
 }

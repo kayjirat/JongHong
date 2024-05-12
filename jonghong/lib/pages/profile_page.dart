@@ -2,114 +2,187 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:jonghong/pages/editprofile_page.dart';
-import 'package:jonghong/pages/home_page.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jonghong/components/logOutButton.dart';
+import 'package:jonghong/pages/feedback_page.dart';
+import 'package:jonghong/pages/my_reservation.dart';
+import 'package:jonghong/pages/room_list.dart';
 
 class ProfilePage extends StatelessWidget {
   final User user;
-  final FirebaseFirestore db;
+  //final FirebaseFirestore db;
 
-  const ProfilePage({Key? key, required this.user, required this.db})
+  const ProfilePage({Key? key, required this.user})
       : super(key: key);
-    
 
-  void _handleGoogleSignOut() async {
-  try {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-  } catch (e) {
-    print(e);
-  }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              try {
-                await FirebaseAuth.instance.signOut();
-                _handleGoogleSignOut();
-
-                // After signing out, navigate back to the login screen or any other desired screen
-                // For example, you can navigate back to the home screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Homepage(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Stack(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFFFF8F4C),
+                        Color(0xFFFE5B3D),
+                        Color(0xFFFE3231),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.0, 0.19, 1.0],
+                    ),
                   ),
-                );
-              } catch (e) {
-                print('Error signing out: $e');
-              }
-            },
-            icon: const Icon(Icons.logout),
+                ),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.0, top: 40),
+                    child: LogoutButton(),
+                  ),
+                ],
+              ),
+              // Whitebox
+              Padding(
+                padding: const EdgeInsets.only(top: 180.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 100.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, 0, 0, 0), // Outline color
+                        ),
+                        child: CircleAvatar(
+                          radius: 80, // Adjust the radius as needed
+                          backgroundImage: NetworkImage(
+                            user.photoURL ??
+                                'https://example.com/placeholder.jpg',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        user.displayName ?? 'User',
+                        style: TextStyle(
+                          fontFamily:
+                              'poppins', // Change to your desired font family
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..shader = const LinearGradient(
+                              colors: [
+                                Color(0xFFFF8F4C),
+                                Color(0xFFFE5B3D),
+                                Color(0xFFFE3231),
+                              ],
+                            ).createShader(
+                                const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Email:',
+                              style: TextStyle(
+                                fontFamily: 'poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                foreground: Paint()
+                                  ..shader = const LinearGradient(
+                                    colors: [
+                                      Color(0xFFFF8F4C),
+                                      Color(0xFFFE5B3D),
+                                      Color(0xFFFE3231),
+                                    ],
+                                  ).createShader(const Rect.fromLTWH(
+                                      0.0, 0.0, 200.0, 70.0)),
+                              ),
+                            ),
+                            const SizedBox(width: 30),
+                            Text('${user.email}',
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontSize: 16,
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 50, // Adjust the radius as needed
-                  backgroundImage: NetworkImage(user.photoURL!),
-                ),
-                Text(user.displayName ?? 'User'),
-                StreamBuilder<DocumentSnapshot>(
-                  stream: db.collection('users').doc(user.uid).snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator(); // Show loading indicator while fetching data
-                    }
-                    var userData = snapshot.data!.data() as Map<String, dynamic>; // Explicit cast to Map<String, dynamic>
-                    String phoneNumber = userData['phone'] ?? 'Phone number not available';
-                    return Text('Telephone: $phoneNumber');
-                  },
-                ),
-
-                StreamBuilder<DocumentSnapshot>(
-                  stream: db.collection('users').doc(user.uid).snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator(); // Show loading indicator while fetching data
-                    }
-                    var userData = snapshot.data!.data() as Map<String,
-                        dynamic>; // Explicit cast to Map<String, dynamic
-                    String address = userData['address'] ?? 'KMUTT';
-                    return Text('Address: $address');
-                  },
-                ),
-                Text('Email: ${user.email}'),
-              ],
-            ),
-            const SizedBox(height: 20), // Add some spacing
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the new page 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(
-                        user: user,
-                        db: FirebaseFirestore
-                            .instance), // Instantiate the new page
-                  ),
-                );
-              },
-              child: const Text('Edit Profile'), // Text for the button
-            ),
-          ],
         ),
       ),
+      floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+        FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RoomListPage(user: user),
+            ),
+          );
+        },
+        child: const Icon(Icons.room),
+      ),
+      const SizedBox(height: 20),
+      FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyReservationPage(uid: user.uid), // Instantiate the new page
+            ),
+          );
+        },
+        child: const Icon(Icons.calendar_today),
+      ),
+      const SizedBox(height: 20),
+      FloatingActionButton(
+        onPressed: () {
+          // Navigate to the new page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FeedbackPage(uid: user.uid)), 
+            );
+        },
+        child: const Icon(Icons.assessment_rounded),
+      ),
+      ],
+    ),
     );
   }
 }
