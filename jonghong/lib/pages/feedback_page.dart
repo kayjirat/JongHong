@@ -15,7 +15,8 @@ class FeedbackPage extends StatefulWidget {
   @override
   FeedbackPageState createState() => FeedbackPageState();
 }
-class FeedbackPageState extends State<FeedbackPage>{
+
+class FeedbackPageState extends State<FeedbackPage> {
   final FeedbackService feedbackService = FeedbackService();
   final FirebaseService firebaseService = FirebaseService();
   var feedbackController = TextEditingController();
@@ -26,11 +27,11 @@ class FeedbackPageState extends State<FeedbackPage>{
     super.initState();
     setUser();
   }
-  
+
   Future<User?> getUser() async {
     return await firebaseService.getCurrentUser();
-
   }
+
   Future<void> setUser() async {
     await getUser().then((value) {
       setState(() {
@@ -39,8 +40,7 @@ class FeedbackPageState extends State<FeedbackPage>{
     });
     // print(user);
   }
-  
-  
+
   Future<void> sendFeedback(String uid, String feedback) async {
     try {
       await feedbackService.sendFeedback(uid, feedback);
@@ -56,32 +56,35 @@ class FeedbackPageState extends State<FeedbackPage>{
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Thank you!',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          ),
-          content: const Text('Your feedback has been sent.',
-          style: TextStyle(
-                color: Color.fromARGB(255, 64, 64, 64),
-                fontFamily: 'poppins',
-                fontSize: 14,
-              ),
+          title: const Text(
+            'Thank you!',
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          content: const Text(
+            'Your feedback has been sent.',
+            style: TextStyle(
+              color: Color.fromARGB(255, 64, 64, 64),
+              fontFamily: 'poppins',
+              fontSize: 14,
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK',
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'poppins',
-                fontSize: 14,
-              ),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'poppins',
+                  fontSize: 14,
+                ),
               ),
             ),
           ],
@@ -92,7 +95,7 @@ class FeedbackPageState extends State<FeedbackPage>{
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: [
@@ -111,6 +114,50 @@ class FeedbackPageState extends State<FeedbackPage>{
                     stops: [0.0, 0.19, 1.0],
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(
+                          0.02), // Adjust opacity value (0.0 to 1.0)
+                      BlendMode.srcATop,
+                    ),
+                    child: Image.asset(
+                      'assets/images/whiteLogo.png',
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.width * 0.3,
+                      opacity: const AlwaysStoppedAnimation(.5),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                  ),
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).size.height,
+                  // ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.06),
+                    child: const Opacity(
+                      opacity: 0.5,
+                      child: Text(
+                        'Jong Hong',
+                        style: TextStyle(
+                          fontFamily: 'poppins',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -179,7 +226,8 @@ class FeedbackPageState extends State<FeedbackPage>{
                             ),
                           ),
                         ),
-                        const SizedBox(height: 70), // Add space before feedback box
+                        const SizedBox(
+                            height: 70), // Add space before feedback box
                         Padding(
                           padding: const EdgeInsets.fromLTRB(50.0, 0, 50.0,
                               0), // Adjust left-right padding here
@@ -211,7 +259,8 @@ class FeedbackPageState extends State<FeedbackPage>{
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 0),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color:const  Color(0xFF9D9D9D)),
+                                  border: Border.all(
+                                      color: const Color(0xFF9D9D9D)),
                                   color: const Color(0xFFF1F1F1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -221,12 +270,13 @@ class FeedbackPageState extends State<FeedbackPage>{
                                       decoration: const InputDecoration(
                                         hintText: 'Please type here...',
                                         hintStyle: TextStyle(
-                                            color: Color.fromARGB(221, 55, 55, 55),
+                                            color:
+                                                Color.fromARGB(221, 55, 55, 55),
                                             fontSize: 10), // Set font size here
                                         border: InputBorder.none,
-                                        
                                       ),
-                                      style: const TextStyle(color: Colors.black87),
+                                      style: const TextStyle(
+                                          color: Colors.black87),
                                       maxLines: 6,
                                       controller: feedbackController,
                                     ),
@@ -237,41 +287,44 @@ class FeedbackPageState extends State<FeedbackPage>{
                             ],
                           ),
                         ),
-                        const SizedBox(height: 90), // Add space after feedback box
+                        const SizedBox(
+                            height: 90), // Add space after feedback box
                         ElevatedButton(
                           onPressed: () {
                             showDialog(
-                              context: context, 
-                              builder: (context){
-                              if(feedbackController.text.isNotEmpty){
-                                return ConfirmationDialog(
-                                  title: 'Send Feedback',
-                                  content: 'Are you sure you want to send this feedback?',
-                                  onCancel : () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  onConfirm: () {
-                                    sendFeedback(widget.uid, feedbackController.text);
-                                    //showThankYouDialog();
-                                    Navigator.of(context).pop();
-                                  },
-                                );
-                              } else {
-                                return AlertDialog(
-                                  title: const Text('Error'),
-                                  content: const Text('Please enter your feedback before sending.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
+                                context: context,
+                                builder: (context) {
+                                  if (feedbackController.text.isNotEmpty) {
+                                    return ConfirmationDialog(
+                                      title: 'Send Feedback',
+                                      content:
+                                          'Are you sure you want to send this feedback?',
+                                      onCancel: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              }
-                              }
-                            );
+                                      onConfirm: () {
+                                        sendFeedback(widget.uid,
+                                            feedbackController.text);
+                                        //showThankYouDialog();
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  } else {
+                                    return AlertDialog(
+                                      title: const Text('Error'),
+                                      content: const Text(
+                                          'Please enter your feedback before sending.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                });
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -304,48 +357,49 @@ class FeedbackPageState extends State<FeedbackPage>{
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-        FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProfilePage(
-                  user: user,
-                  //db: FirebaseFirestore.instance
-              ), // Instantiate the new page
-            ),
-          );
-        },
-        child: const Icon(Icons.person),
+          FloatingActionButton(
+            onPressed: () {
+              // Navigate to the new page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    user: user,
+                    //db: FirebaseFirestore.instance
+                  ), // Instantiate the new page
+                ),
+              );
+            },
+            child: const Icon(Icons.person),
+          ),
+          const SizedBox(height: 20),
+          FloatingActionButton(
+            onPressed: () {
+              // Navigate to the new page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RoomListPage(user: user), // Instantiate the new page
+                ),
+              );
+            },
+            child: const Icon(Icons.room),
+          ),
+          const SizedBox(height: 20),
+          FloatingActionButton(
+            onPressed: () {
+              // Navigate to the new page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FeedbackPage(uid: widget.uid)),
+              );
+            },
+            child: const Icon(Icons.assessment_rounded),
+          ),
+        ],
       ),
-      const SizedBox(height: 20),
-      FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RoomListPage(user: user), // Instantiate the new page
-            ),
-          );
-        },
-        child: const Icon(Icons.room),
-      ),
-      const SizedBox(height: 20),
-      FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FeedbackPage(uid: widget.uid)), 
-            );
-        },
-        child: const Icon(Icons.assessment_rounded),
-      ),
-      ],
-    ),
     );
   }
 }

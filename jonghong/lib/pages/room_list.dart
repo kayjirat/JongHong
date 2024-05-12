@@ -53,6 +53,50 @@ class RoomListPage extends StatelessWidget {
             ),
             // Whitebox
             Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(
+                          0.02), // Adjust opacity value (0.0 to 1.0)
+                      BlendMode.srcATop,
+                    ),
+                    child: Image.asset(
+                      'assets/images/whiteLogo.png',
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.width * 0.3,
+                      opacity: const AlwaysStoppedAnimation(.5),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                  ),
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).size.height,
+                  // ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.06),
+                    child: const Opacity(
+                      opacity: 0.5,
+                      child: Text(
+                        'Jong Hong',
+                        style: TextStyle(
+                          fontFamily: 'poppins',
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.only(top: 180.0),
               child: Container(
                 height: MediaQuery.of(context).size.height,
