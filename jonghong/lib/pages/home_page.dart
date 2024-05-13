@@ -3,11 +3,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:sign_in_button/sign_in_button.dart';
 import 'package:flutter/foundation.dart' as foundation;
-import 'package:jonghong/pages/Login.dart';
 import 'package:jonghong/services/firebase_service.dart';
 import 'package:jonghong/pages/room_list.dart';
 
@@ -155,175 +154,123 @@ class _HomepageState extends State<Homepage> {
                     ),
 
                     //Button
-                    // GestureDetector(
-                    //   onTap: () async {
-                    //     try {
-                    //       final auth = FirebaseAuth.instance;
-                    //       UserCredential userCredential;
-                    //       if (isWeb || kIsWeb) {
-                    //         final GoogleAuthProvider googleProvider =
-                    //             GoogleAuthProvider();
-                    //         userCredential =
-                    //             await auth.signInWithPopup(googleProvider);
-                    //       } else {
-                    //         final GoogleSignIn googleSignIn = GoogleSignIn();
-                    //         final GoogleSignInAccount? googleUser =
-                    //             await googleSignIn.signIn();
-                    //         if (googleUser == null) {
-                    //           print('Google Sign-In was cancelled or failed.');
-                    //           return;
-                    //         }
+                    GestureDetector(
+                      onTap: () async {
+                        try {
+                          final auth = FirebaseAuth.instance;
+                          UserCredential userCredential;
 
-                    //         final GoogleSignInAuthentication googleAuth =
-                    //             await googleUser.authentication;
+                          if (isWeb || kIsWeb) {
+                            final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+                            userCredential = await auth.signInWithPopup(googleProvider);
+                          } else {
+                            final GoogleSignIn googleSignIn = GoogleSignIn();
+                            final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+                            if (googleUser == null) {
+                              print('Google Sign-In was cancelled or failed.');
+                              return;
+                            }
 
-                    //         if (googleAuth == null) {
-                    //           print(
-                    //               'Google authentication data is not available.');
-                    //           return;
-                    //         }
+                            final GoogleSignInAuthentication googleAuth =
+                                await googleUser.authentication;
 
-                    //         final AuthCredential credential =
-                    //             GoogleAuthProvider.credential(
-                    //           idToken: googleAuth.idToken,
-                    //           accessToken: googleAuth.accessToken,
-                    //         );
-                    //         userCredential =
-                    //             await auth.signInWithCredential(credential);
-                    //       }
+                            if (googleAuth == null) {
+                              print('Google authentication data is not available.');
+                              return;
+                            }
 
-                    //       await FirebaseService()
-                    //           .checkOrCreateUser(userCredential.user!);
+                            final AuthCredential credential = GoogleAuthProvider.credential(
+                              idToken: googleAuth.idToken,
+                              accessToken: googleAuth.accessToken,
+                            );
 
-                    //       Navigator.pushReplacement(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) =>
-                    //               RoomListPage(user: userCredential.user!),
-                    //         ),
-                    //       );
-                    //     } catch (e) {
-                    //       print('Error during Google Sign-In: $e');
-                    //     }
-                    //   },
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     padding: const EdgeInsets.symmetric(vertical: 10),
-                    //     margin: const EdgeInsets.symmetric(
-                    //         horizontal: 40, vertical: 20),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       gradient: const LinearGradient(
-                    //         begin: Alignment.topCenter,
-                    //         end: Alignment.bottomCenter,
-                    //         colors: [
-                    //           Color(0xFFFF8F4C),
-                    //           Color(0xFFFE5B3D),
-                    //           Color(0xFFFE3231),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     child: const Center(
-                    //       child: Text(
-                    //         'Login',
-                    //         style: TextStyle(
-                    //           fontFamily: 'Poppins',
-                    //           fontWeight: FontWeight.w500,
-                    //           fontSize: 14,
-                    //           color: Colors.white,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                            // Email pattern validation
+                            final emailPattern = RegExp(r'^[a-zA-Z0-9_.+-]+@[mail.kmutt.ac.th]');
+                            
 
-                    //-----informal login -------
-                    // GestureDetector(
-                    //   onTap: () async {
-                    //     try {
-                    //       final auth = FirebaseAuth.instance;
-                    //       UserCredential userCredential;
+                            void showCustomDialog(BuildContext context, String message) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Error'),
+                                    content: Text(
+                                      message,
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
 
-                    //       if (isWeb || kIsWeb) {
-                    //         final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-                    //         userCredential = await auth.signInWithPopup(googleProvider);
-                    //       } else {
-                    //         final GoogleSignIn googleSignIn = GoogleSignIn();
-                    //         final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-                    //         if (googleUser == null) {
-                    //           print('Google Sign-In was cancelled or failed.');
-                    //           return;
-                    //         }
+                            // Usage:
+                            if (!emailPattern.hasMatch(googleUser.email)) {
+                              showCustomDialog(
+                                context,
+                                'Invalid email format. Please use mail.kmutt.ac.th email address.',
+                              );
+                              // Reset the login process
+                              await GoogleSignIn().signOut(); // Reset the Google user
+                              // You can add additional reset logic here if needed
+                              return;
+                            }
 
-                    //         final GoogleSignInAuthentication googleAuth =
-                    //             await googleUser.authentication;
 
-                    //         if (googleAuth == null) {
-                    //           print('Google authentication data is not available.');
-                    //           return;
-                    //         }
 
-                    //         final AuthCredential credential = GoogleAuthProvider.credential(
-                    //           idToken: googleAuth.idToken,
-                    //           accessToken: googleAuth.accessToken,
-                    //         );
+                            userCredential = await auth.signInWithCredential(credential);
+                          }
 
-                    //         // Email pattern validation
-                    //         final emailPattern = RegExp(r'^[a-zA-Z0-9_.+-]+@[mail.kmutt.ac.th]');
-                    //         if (!emailPattern.hasMatch(googleUser.email)) {
-                    //           Fluttertoast.showToast(
-                    //             msg: 'Invalid email format. Please use a valid email address.',
-                    //             gravity: ToastGravity.BOTTOM,
-                    //             backgroundColor: Colors.red,
-                    //             textColor: Colors.white,
-                    //           );
-                    //           return;
-                    //         }
+                          await FirebaseService().checkOrCreateUser(userCredential.user!);
+                          
+                          
 
-                    //         userCredential = await auth.signInWithCredential(credential);
-                    //       }
-
-                    //       await FirebaseService().checkOrCreateUser(userCredential.user!);
-
-                    //       Navigator.pushReplacement(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => RoomListPage(user: userCredential.user!),
-                    //         ),
-                    //       );
-                    //     } catch (e) {
-                    //       print('Error during Google Sign-In: $e');
-                    //     }
-                    //   },
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     padding: const EdgeInsets.symmetric(vertical: 10),
-                    //     margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       gradient: const LinearGradient(
-                    //         begin: Alignment.topCenter,
-                    //         end: Alignment.bottomCenter,
-                    //         colors: [
-                    //           Color(0xFFFF8F4C),
-                    //           Color(0xFFFE5B3D),
-                    //           Color(0xFFFE3231),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     child: const Center(
-                    //       child: Text(
-                    //         'Login',
-                    //         style: TextStyle(
-                    //           fontFamily: 'Poppins',
-                    //           fontWeight: FontWeight.w500,
-                    //           fontSize: 14,
-                    //           color: Colors.white,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RoomListPage(user: userCredential.user!),
+                            ),
+                          );
+                        } catch (e) {
+                          print('Error during Google Sign-In: $e');
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFFFF8F4C),
+                              Color(0xFFFE5B3D),
+                              Color(0xFFFE3231),
+                            ],
+                          ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
 
                     
                   ],

@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.7.5):
+    - AppAuth/Core (= 1.7.5)
+    - AppAuth/ExternalUserAgent (= 1.7.5)
+  - AppAuth/Core (1.7.5)
+  - AppAuth/ExternalUserAgent (1.7.5):
+    - AppAuth/Core
   - cloud_firestore (4.17.2):
     - Firebase/Firestore (= 10.24.0)
     - firebase_core
@@ -57,6 +63,16 @@ PODS:
     - nanopb (< 2.30911.0, >= 2.30908.0)
   - FirebaseSharedSwift (10.24.0)
   - Flutter (1.0.0)
+  - google_sign_in_ios (0.0.1):
+    - AppAuth (>= 1.7.4)
+    - Flutter
+    - FlutterMacOS
+    - GoogleSignIn (~> 7.1)
+    - GTMSessionFetcher (>= 3.4.0)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
   - GoogleUtilities/AppDelegateSwizzler (7.13.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -79,7 +95,14 @@ PODS:
   - GoogleUtilities/Reachability (7.13.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher (3.4.1):
+    - GTMSessionFetcher/Full (= 3.4.1)
   - GTMSessionFetcher/Core (3.4.1)
+  - GTMSessionFetcher/Full (3.4.1):
+    - GTMSessionFetcher/Core
   - leveldb-library (1.22.5)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
@@ -88,6 +111,9 @@ PODS:
   - nanopb/encode (2.30910.0)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -95,9 +121,12 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.24.0`)
   - Flutter (from `Flutter`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -111,7 +140,9 @@ SPEC REPOS:
     - FirebaseFirestoreGRPCCPPBinary
     - FirebaseFirestoreInternalBinary
     - FirebaseSharedSwift
+    - GoogleSignIn
     - GoogleUtilities
+    - GTMAppAuth
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
@@ -130,6 +161,10 @@ EXTERNAL SOURCES:
     :tag: 10.24.0
   Flutter:
     :path: Flutter
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/darwin"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 CHECKOUT OPTIONS:
   FirebaseFirestore:
@@ -137,6 +172,7 @@ CHECKOUT OPTIONS:
     :tag: 10.24.0
 
 SPEC CHECKSUMS:
+  AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
   cloud_firestore: a291c7ca0e498f9b08bbabd47a2499a5ae02c152
   Firebase: 91fefd38712feb9186ea8996af6cbdef41473442
   firebase_auth: b782567cafd5cfd64debf54638a9f29b63abd7bf
@@ -155,14 +191,17 @@ SPEC CHECKSUMS:
   FirebaseFirestoreInternalBinary: 264bc7678c6df6581477b139a216f6b3340efb64
   FirebaseSharedSwift: 76e1529c32101d80e4f1ca2fba7c39d59f0a390a
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  google_sign_in_ios: 94c35a71a0559e80bec3af051a3fd0ed845c3f26
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 8000756fc1c19d2e5697b90311f7832d2e33f6cd
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
 
-PODFILE CHECKSUM: dad971121bc194c814c42dd9dfc838853508b1b4
+PODFILE CHECKSUM: 4aa6b6a7ba929acb5a39863f2ff69d39edd8c6e0
 
 COCOAPODS: 1.14.3
-
