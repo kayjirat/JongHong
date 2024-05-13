@@ -56,9 +56,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
     setState(() {
       _pageOptions = [
         RoomListPage(user: user),
-        const MyReservationPage(uid: ''),
+        MyReservationPage(uid: user.uid),
         ProfilePage(user: user),
-        const FeedbackPage(uid: ''),
+        FeedbackPage(uid: user.uid),
       ];
     });
   }
