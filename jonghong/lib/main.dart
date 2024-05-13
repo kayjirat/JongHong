@@ -56,7 +56,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     setState(() {
       _pageOptions = [
         RoomListPage(user: user),
-        MyReservationPage(uid: user.uid),
+        MyReservationPage(uid: user.uid, key: UniqueKey()),
         ProfilePage(user: user),
         FeedbackPage(uid: user.uid),
       ];
@@ -65,6 +65,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   Future<User?> getUser() async {
     return await _firebaseService.getCurrentUser();
+  }
+
+  Future<void> updateBookings() async {
+    final user = await getUser();
+    setState(() {
+      _pageOptions[1] = MyReservationPage(uid: user!.uid, key: UniqueKey());
+    });
   }
 
   @override
@@ -85,6 +92,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
         onTap: (int index) {
           setState(() {
             _selectedPage = index;
+            if (index == 1) { // Check if "My Bookings" page is selected
+              updateBookings(); // Call updateBookings to fetch reservations
+            }
           });
         },
         items: const [
