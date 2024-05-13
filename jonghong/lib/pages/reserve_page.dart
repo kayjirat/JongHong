@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:jonghong/models/room.dart';
 import 'package:jonghong/services/firestore_service.dart';
@@ -357,13 +356,6 @@ class ReservePageState extends State<ReservePage> {
                       child: FutureBuilder<List<String>>(
                         future: notReservedTime(room.roomId, picked),
                         builder: (context, snapshot) {
-                          // if (snapshot.connectionState == ConnectionState.waiting) {
-                          //   // Show loading indicator while fetching data
-                          //   return CircularProgressIndicator();
-                          // } else if (snapshot.hasError) {
-                          //   // Show error message if an error occurred
-                          //   return Text('Error: ${snapshot.error}');
-                          // } else {
                           final List<String> noReservedTimes =
                               snapshot.data ?? [];
                           return Wrap(

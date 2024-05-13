@@ -1,15 +1,11 @@
 // ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jonghong/components/ReservationCard.dart';
-import 'package:jonghong/pages/profile_page.dart';
 import 'package:jonghong/services/firebase_service.dart';
 import 'package:jonghong/services/firestore_service.dart';
 import 'package:jonghong/services/reservation_service.dart';
 import 'package:jonghong/models/room.dart';
-import 'package:jonghong/pages/feedback_page.dart';
-import 'package:jonghong/pages/room_list.dart';
 
 class MyReservationPage extends StatefulWidget {
   final String uid;
@@ -383,71 +379,7 @@ class MyReservationPageState extends State<MyReservationPage> {
             ),
           ),
         ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-              FloatingActionButton(
-              onPressed: () {
-                // Navigate to the new page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-                        user: user,
-                       // db: FirebaseFirestore.instance
-                    ), // Instantiate the new page
-                  ),
-                );
-              },
-              child: const Icon(Icons.person),
-            ),
-            const SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: () {
-                // Navigate to the new page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        RoomListPage(user: user), // Instantiate the new page
-                  ),
-                );
-              },
-              child: const Icon(Icons.room),
-            ),
-            const SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: () {
-                // Navigate to the new page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FeedbackPage(uid: widget.uid)),
-                );
-              },
-              child: const Icon(Icons.assessment_rounded),
-            ),
-          ],
-        ),
       ),
     );
   }
 }
-
-
-// showDialog(
-//                                         context: context,
-//                                         builder: (context) {
-//                                           return ConfirmationDialog(
-//                                             title: 'Delete Reservation',
-//                                             content: 'Are you sure you want to delete this reservation?',
-//                                             onCancel: () {
-//                                               Navigator.of(context).pop();
-//                                             },
-//                                             onConfirm: () {
-//                                               deleteReservation(reservation['reserveId'], widget.uid, reservation['rDate'].toString());
-//                                               Navigator.of(context).pop();
-//                                             },
-//                                           );
-//                                         },
-//                                       );

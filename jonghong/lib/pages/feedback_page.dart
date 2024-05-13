@@ -1,12 +1,9 @@
 // ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jonghong/components/confirmDialog.dart';
-import 'package:jonghong/pages/profile_page.dart';
 import 'package:jonghong/services/feedback_service.dart';
 import 'package:jonghong/services/firebase_service.dart';
-import 'package:jonghong/pages/room_list.dart';
 
 class FeedbackPage extends StatefulWidget {
   final String uid;
@@ -353,52 +350,6 @@ class FeedbackPageState extends State<FeedbackPage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              // Navigate to the new page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                    user: user,
-                    //db: FirebaseFirestore.instance
-                  ), // Instantiate the new page
-                ),
-              );
-            },
-            child: const Icon(Icons.person),
-          ),
-          const SizedBox(height: 20),
-          FloatingActionButton(
-            onPressed: () {
-              // Navigate to the new page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      RoomListPage(user: user), // Instantiate the new page
-                ),
-              );
-            },
-            child: const Icon(Icons.room),
-          ),
-          const SizedBox(height: 20),
-          FloatingActionButton(
-            onPressed: () {
-              // Navigate to the new page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FeedbackPage(uid: widget.uid)),
-              );
-            },
-            child: const Icon(Icons.assessment_rounded),
-          ),
-        ],
       ),
     );
   }

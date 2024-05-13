@@ -1,13 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jonghong/components/logOutButton.dart';
 import 'package:jonghong/components/roomListCard.dart';
-//import 'package:jonghong/controller/user_controller.dart';
 import 'package:jonghong/models/room.dart';
-import 'package:jonghong/pages/feedback_page.dart';
-import 'package:jonghong/pages/my_reservation.dart';
-import 'package:jonghong/pages/profile_page.dart';
 import 'package:jonghong/pages/reserve_page.dart';
 import 'package:jonghong/services/firestore_service.dart';
 
@@ -45,8 +40,7 @@ class RoomListPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
-                      left: 20.0, top: 40), 
+                  padding: EdgeInsets.only(left: 20.0, top: 40),
                   child: LogoutButton(),
                 ),
               ],
@@ -74,9 +68,6 @@ class RoomListPage extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.3,
                   ),
-                  // SizedBox(
-                  //   height: MediaQuery.of(context).size.height,
-                  // ),
                   Padding(
                     padding: EdgeInsets.only(
                         left: MediaQuery.of(context).size.width * 0.06),
@@ -121,8 +112,8 @@ class RoomListPage extends StatelessWidget {
                           padding: const EdgeInsets.all(2),
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color:  Color.fromARGB(
-                                255, 0, 0, 0), // Outline color
+                            color:
+                                Color.fromARGB(255, 0, 0, 0), // Outline color
                           ),
                           child: CircleAvatar(
                             radius: 80,
@@ -216,52 +207,6 @@ class RoomListPage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-        FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProfilePage(
-                  user: user,
-                 // db: FirebaseFirestore.instance
-              ), // Instantiate the new page
-            ),
-          );
-        },
-        child: const Icon(Icons.person),
-      ),
-      const SizedBox(height: 20),
-      FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyReservationPage(uid: user.uid), // Instantiate the new page
-            ),
-          );
-        },
-        child: const Icon(Icons.calendar_today),
-      ),
-      const SizedBox(height: 20),
-      FloatingActionButton(
-        onPressed: () {
-          // Navigate to the new page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FeedbackPage(uid: user.uid)), 
-            );
-        },
-        child: const Icon(Icons.assessment_rounded),
-      ),
-      ],
-    ),
     );
   }
 }
