@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:jonghong/main.dart';
 import 'package:jonghong/pages/room_list.dart';
 import 'package:jonghong/services/firebase_service.dart';
 
-bool isWeb = identical(
-    foundation.defaultTargetPlatform, TargetPlatform.fuchsia);
-bool isAndroid = identical(
-    foundation.defaultTargetPlatform, TargetPlatform.android);
-bool isIOS =
-    identical(foundation.defaultTargetPlatform, TargetPlatform.iOS);
+bool isWeb =
+    identical(foundation.defaultTargetPlatform, TargetPlatform.fuchsia);
+bool isAndroid =
+    identical(foundation.defaultTargetPlatform, TargetPlatform.android);
+bool isIOS = identical(foundation.defaultTargetPlatform, TargetPlatform.iOS);
 
 typedef SignOutCallback = Future<void> Function();
 late final SignOutCallback signOutCallback;
@@ -59,8 +59,7 @@ class _HomepageState extends State<Homepage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                            top: 65.0, left: 20.0),
+                        padding: const EdgeInsets.only(top: 65.0, left: 20.0),
                         child: Image.asset(
                           'assets/images/whiteLogo.png',
                           width: 120,
@@ -95,7 +94,7 @@ class _HomepageState extends State<Homepage> {
                         padding: const EdgeInsets.only(top: 190.0),
                         child: Container(
                           width: double.infinity,
-                          height: 318.2,
+                          height: 1000,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
@@ -139,95 +138,106 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                         ),
-                        
-                    GestureDetector(
-                      onTap: () async {
-                        try {
-                          final auth = FirebaseAuth.instance;
-                          UserCredential userCredential;
+                        GestureDetector(
+                          onTap: () async {
+                            try {
+                              final auth = FirebaseAuth.instance;
+                              UserCredential userCredential;
 
-                          if (isWeb || kIsWeb) {
-                            final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-                            userCredential = await auth.signInWithPopup(googleProvider);
-                          } else {
-                            final GoogleSignIn googleSignIn = GoogleSignIn();
-                            final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-                            if (googleUser == null) {
-                              print('Google Sign-In was cancelled or failed.');
-                              return;
-                            }
+                              if (isWeb || kIsWeb) {
+                                final GoogleAuthProvider googleProvider =
+                                    GoogleAuthProvider();
+                                userCredential =
+                                    await auth.signInWithPopup(googleProvider);
+                              } else {
+                                final GoogleSignIn googleSignIn =
+                                    GoogleSignIn();
+                                final GoogleSignInAccount? googleUser =
+                                    await googleSignIn.signIn();
+                                if (googleUser == null) {
+                                  print(
+                                      'Google Sign-In was cancelled or failed.');
+                                  return;
+                                }
 
-                            final GoogleSignInAuthentication googleAuth =
-                                await googleUser.authentication;
+                                final GoogleSignInAuthentication googleAuth =
+                                    await googleUser.authentication;
 
-                            if (googleAuth == null) {
-                              print('Google authentication data is not available.');
-                              return;
-                            }
+                                if (googleAuth == null) {
+                                  print(
+                                      'Google authentication data is not available.');
+                                  return;
+                                }
 
-                            final AuthCredential credential = GoogleAuthProvider.credential(
-                              idToken: googleAuth.idToken,
-                              accessToken: googleAuth.accessToken,
-                            );
+                                final AuthCredential credential =
+                                    GoogleAuthProvider.credential(
+                                  idToken: googleAuth.idToken,
+                                  accessToken: googleAuth.accessToken,
+                                );
 
-                            // Email pattern validation
-                            final emailPattern = RegExp(r'^[a-zA-Z0-9_.+-]+@[mail.kmutt.ac.th]');
-                            if (!emailPattern.hasMatch(googleUser.email)) {
-                              Fluttertoast.showToast(
-                                msg: 'Invalid email format. Please use @mail.kmutt.ac.th email address.',
-                                gravity: ToastGravity.CENTER,
-                                backgroundColor: Color.fromARGB(255, 255, 149, 149),
-                                textColor: Colors.white,
-                                
+                                // Email pattern validation
+                                final emailPattern = RegExp(
+                                    r'^[a-zA-Z0-9_.+-]+@[mail.kmutt.ac.th]');
+                                if (!emailPattern.hasMatch(googleUser.email)) {
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        'Invalid email format. Please use @mail.kmutt.ac.th email address.',
+                                    gravity: ToastGravity.CENTER,
+                                    backgroundColor:
+                                        Color.fromARGB(255, 255, 149, 149),
+                                    textColor: Colors.white,
+                                  );
+                                  return;
+                                }
+
+                                userCredential =
+                                    await auth.signInWithCredential(credential);
+                              }
+
+                              await FirebaseService()
+                                  .checkOrCreateUser(userCredential.user!);
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BottomNavigation(),
+                                ),
                               );
-                              return;
+                            } catch (e) {
+                              print('Error during Google Sign-In: $e');
                             }
-
-                            userCredential = await auth.signInWithCredential(credential);
-                          }
-
-                          await FirebaseService().checkOrCreateUser(userCredential.user!);
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RoomListPage(user: userCredential.user!),
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xFFFF8F4C),
+                                  Color(0xFFFE5B3D),
+                                  Color(0xFFFE3231),
+                                ],
+                              ),
                             ),
-                          );
-                        } catch (e) {
-                          print('Error during Google Sign-In: $e');
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFFFF8F4C),
-                              Color(0xFFFE5B3D),
-                              Color(0xFFFE3231),
-                            ],
-                          ),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Colors.white,
+                            child: const Center(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-
                       ],
                     ),
                   ),
