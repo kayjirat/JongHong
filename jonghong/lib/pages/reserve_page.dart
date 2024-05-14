@@ -60,6 +60,7 @@ class ReservePageState extends State<ReservePage> {
     ReservationService reservationService = ReservationService();
     final success =
         await reservationService.reserveRoom(uid, roomId, date, timeSlot);
+    
     if (success != 'could not reserve room') {
       showDialog(
         context: context,
@@ -129,6 +130,10 @@ class ReservePageState extends State<ReservePage> {
     return await reservationService.notReservedTime(roomId, date);
   }
 
+  Future<bool> hasReservedAtThisTime(String uid, String roomId, DateTime date, String time) async {
+    ReservationService reservationService = ReservationService();
+    return await reservationService.hasReservedAtThisTime(uid, roomId, date, time);
+  }
 //HERE
   @override
   Widget build(BuildContext context) {
@@ -303,11 +308,11 @@ class ReservePageState extends State<ReservePage> {
                             return Theme(
                               data: ThemeData(
                                 brightness: Brightness
-                                    .light, // Adjust based on desired background
+                                    .light, 
                                 primaryColor: Colors
-                                    .orange, // Set primary color to orange
+                                    .orange, 
                                 hintColor: Colors
-                                    .black, // Adjust accent color for text contrast
+                                    .black, 
                               ),
                               child: child!,
                             );
@@ -493,7 +498,7 @@ class ReservePageState extends State<ReservePage> {
                                     (date.day == DateTime.now().day &&
                                         endHour > DateTime.now().hour)) {
                                   if (await checkLimit(widget.uid, date)) {
-                                    // Show confirmation dialog
+                                    if (!await hasReservedAtThisTime(widget.uid, room.roomId, date, selectedTimeSlot)) {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -549,6 +554,26 @@ class ReservePageState extends State<ReservePage> {
                                         );
                                       },
                                     );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Reserve Error'),
+                                            content: const Text(
+                                                'You have reserved this time on this day. Please select new time.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   } else {
                                     showDialog(
                                       context: context,
@@ -568,7 +593,7 @@ class ReservePageState extends State<ReservePage> {
                                         );
                                       },
                                     );
-                                  }
+                                  } 
                                 } else {
                                   showDialog(
                                     context: context,

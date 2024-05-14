@@ -43,6 +43,7 @@ class ReservationService {
 
       final reservationId = reservationRef.id;
       await reservationRef.update({'reserveId': reservationId});
+      print(reservationId);
       return reservationId;
     } catch (e) {
       print('Error: $e');
@@ -125,7 +126,7 @@ class ReservationService {
   }
   Future<List<Map<String, dynamic>>> getReservations(String uid) async {
   try {
-    //print(uid);
+    print(uid);
     final now = DateTime.now();
     QuerySnapshot reservationSnapshot = await _firestore
         .collection('reservation')
@@ -156,7 +157,7 @@ class ReservationService {
     }
     reservations.sort((a, b) => DateTime.parse(a['reserveDate']).compareTo(DateTime.parse(b['reserveDate'])));
     reservations.sort((a, b) => a['reserveTime'].compareTo(b['reserveTime']));
-    //print("hi: $reservations");
+    print("hi: $reservations");
     return reservations;
   } catch (e) {
     print('Error: $e');
@@ -180,4 +181,26 @@ class ReservationService {
       print('Error: $e');
     }
   }
+  Future<bool> hasReservedAtThisTime(String uid, String roomId, DateTime reserveDate, String reserveTime) async {
+    try {
+      // print('hjaa $reserveTime');
+      // print('hello ${reserveDate}');
+      // print('uid');
+      // print(uid);
+      QuerySnapshot reservationSnapshot = await _firestore
+          .collection('reservation')
+          
+          .where('reserveDate', isEqualTo: reserveDate.toString())
+          //.where('reserveDate', isEqualTo: reserveDate)
+          .where('reserveTime', isEqualTo: reserveTime)
+          .where('uid', isEqualTo: uid)
+          .get();
+        print(reservationSnapshot.docs.isNotEmpty);
+      return reservationSnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
 }
+
