@@ -30,7 +30,15 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    // Get the screen width and height
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate responsive padding and margin
+    final double horizontalMargin = screenWidth * 0.1; // 10% of screen width
+    final double verticalMargin = screenHeight * 0.05; // 5% of screen height
+    final double verticalPadding = screenHeight * 0.01; // 1% of screen height
+
     return MaterialApp(
       title: 'Home Page',
       home: Scaffold(
@@ -163,7 +171,6 @@ class _HomepageState extends State<Homepage> {
                                 final GoogleSignInAuthentication googleAuth =
                                     await googleUser.authentication;
 
-                                // ignore: unnecessary_null_comparison
                                 if (googleAuth == null) {
                                   print(
                                       'Google authentication data is not available.');
@@ -184,8 +191,8 @@ class _HomepageState extends State<Homepage> {
                                     msg:
                                         'Invalid email format. Please use @mail.kmutt.ac.th email address.',
                                     gravity: ToastGravity.CENTER,
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 255, 149, 149),
+                                    backgroundColor:
+                                        Color.fromARGB(255, 255, 149, 149),
                                     textColor: Colors.white,
                                   );
                                   return;
@@ -201,8 +208,7 @@ class _HomepageState extends State<Homepage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BottomNavigation(),
+                                  builder: (context) => BottomNavigation(),
                                 ),
                               );
                             } catch (e) {
@@ -211,9 +217,11 @@ class _HomepageState extends State<Homepage> {
                           },
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 20),
+                            padding:
+                                EdgeInsets.symmetric(vertical: verticalPadding),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: horizontalMargin,
+                                vertical: verticalMargin),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: const LinearGradient(
