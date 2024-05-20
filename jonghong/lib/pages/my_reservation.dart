@@ -121,6 +121,7 @@ class MyReservationPageState extends State<MyReservationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return FutureBuilder(
       future: _firebaseService.getCurrentUser(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -188,7 +189,7 @@ class MyReservationPageState extends State<MyReservationPage> {
                         padding: const EdgeInsets.only(top: 120.0),
                         child: Container(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height,
+                          height: screenHeight,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(30),
@@ -204,217 +205,227 @@ class MyReservationPageState extends State<MyReservationPage> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 20.0),
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(20),
-                                        ),
-                                        gradient: const LinearGradient(
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.centerRight,
-                                          transform: GradientRotation(
-                                              47 * 3.14159 / 180),
-                                          colors: [
-                                            Color(0xFFFF8F4C),
-                                            Color(0xFFFE5B3D),
-                                            Color(0xFFFE3231),
-                                          ],
-                                          stops: [0.0, 0.66, 1.0],
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            offset: const Offset(0, 1),
-                                            blurRadius: 6.5,
-                                            spreadRadius: 2,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 20.0),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(20),
                                           ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(
-                                              top: 20.0,
-                                              left: 20.0,
+                                          gradient: const LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            transform: GradientRotation(
+                                                47 * 3.14159 / 180),
+                                            colors: [
+                                              Color(0xFFFF8F4C),
+                                              Color(0xFFFE5B3D),
+                                              Color(0xFFFE3231),
+                                            ],
+                                            stops: [0.0, 0.66, 1.0],
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              offset: const Offset(0, 1),
+                                              blurRadius: 6.5,
+                                              spreadRadius: 2,
                                             ),
-                                            child: Text(
-                                              'Upcoming Reservation',
-                                              style: TextStyle(
-                                                fontFamily: 'poppins',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 20.0,
+                                                left: 20.0,
+                                              ),
+                                              child: Text(
+                                                'Upcoming Reservation',
+                                                style: TextStyle(
+                                                  fontFamily: 'poppins',
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          upcomingReservations.isEmpty
-                                              ? const Padding(
-                                                  padding: EdgeInsets.all(20.0),
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        'Don\'t have any reservations',
-                                                        style: TextStyle(
-                                                          fontFamily: 'poppins',
-                                                          fontSize: 16,
-                                                          color: Colors.white,
+                                            upcomingReservations.isEmpty
+                                                ? const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(20.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          'Don\'t have any reservations',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'poppins',
+                                                            fontSize: 16,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(height: 20),
-                                                    ],
+                                                        SizedBox(height: 20),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                        upcomingReservations
+                                                            .length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      final reservation =
+                                                          upcomingReservations[
+                                                              index];
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 8.0,
+                                                        ),
+                                                        child: ReservationCard(
+                                                          roomName: reservation[
+                                                              'roomName'],
+                                                          roomImage:
+                                                              reservation[
+                                                                  'image'],
+                                                          reservationDate:
+                                                              reservation[
+                                                                  'reserveDate'],
+                                                          capacity: reservation[
+                                                              'capacity'],
+                                                          location: reservation[
+                                                              'location'],
+                                                          detail:
+                                                              'Meeting with clients',
+                                                          roomId: reservation[
+                                                              'roomId'],
+                                                          size: reservation[
+                                                              'size'],
+                                                          time: reservation[
+                                                              'reserveTime'],
+                                                          onPressed: () {
+                                                            deleteReservation(
+                                                              reservation[
+                                                                  'reserveId'],
+                                                              widget.uid,
+                                                              reservation[
+                                                                      'rDate']
+                                                                  .toString(),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
-                                                )
-                                              : ListView.builder(
-                                                  padding: EdgeInsets.zero,
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  itemCount:
-                                                      upcomingReservations
-                                                          .length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    final reservation =
-                                                        upcomingReservations[
-                                                            index];
-                                                    return Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 8.0,
-                                                      ),
-                                                      child: ReservationCard(
-                                                        roomName: reservation[
-                                                            'roomName'],
-                                                        roomImage: reservation[
-                                                            'image'],
-                                                        reservationDate:
-                                                            reservation[
-                                                                'reserveDate'],
-                                                        capacity: reservation[
-                                                            'capacity'],
-                                                        location: reservation[
-                                                            'location'],
-                                                        detail:
-                                                            'Meeting with clients',
-                                                        roomId: reservation[
-                                                            'roomId'],
-                                                        size:
-                                                            reservation['size'],
-                                                        time: reservation[
-                                                            'reserveTime'],
-                                                        onPressed: () {
-                                                          deleteReservation(
-                                                            reservation[
-                                                                'reserveId'],
-                                                            widget.uid,
-                                                            reservation['rDate']
-                                                                .toString(),
-                                                          );
-                                                        },
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 10, left: 18.0),
-                                    child: Text(
-                                      'Reservations',
-                                      style: TextStyle(
-                                        fontFamily: 'poppins',
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFFFE5B3D),
+                                const SizedBox(height: 10),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 10, left: 18.0),
+                                      child: Text(
+                                        'Reservations',
+                                        style: TextStyle(
+                                          fontFamily: 'poppins',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFFFE5B3D),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  otherReservations.isEmpty
-                                      ? const Padding(
-                                          padding: EdgeInsets.all(20.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'No other reservations',
-                                                style: TextStyle(
-                                                  fontFamily: 'poppins',
-                                                  fontSize: 16,
-                                                  color: Color(0xFFFE5B3D),
+                                    const SizedBox(height: 10),
+                                    otherReservations.isEmpty
+                                        ? const Padding(
+                                            padding: EdgeInsets.all(20.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'No other reservations',
+                                                  style: TextStyle(
+                                                    fontFamily: 'poppins',
+                                                    fontSize: 16,
+                                                    color: Color(0xFFFE5B3D),
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 20),
-                                            ],
+                                                SizedBox(height: 20),
+                                              ],
+                                            ),
+                                          )
+                                        : ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: otherReservations.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final reservation =
+                                                  otherReservations[index];
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 8.0,
+                                                  horizontal: 20.0,
+                                                ),
+                                                child: ReservationCard(
+                                                  roomName:
+                                                      reservation['roomName'],
+                                                  roomImage:
+                                                      reservation['image'],
+                                                  reservationDate: reservation[
+                                                      'reserveDate'],
+                                                  capacity:
+                                                      reservation['capacity'],
+                                                  location:
+                                                      reservation['location'],
+                                                  detail:
+                                                      'Meeting with clients',
+                                                  roomId: reservation['roomId'],
+                                                  size: reservation['size'],
+                                                  time: reservation[
+                                                      'reserveTime'],
+                                                  onPressed: () {
+                                                    deleteReservation(
+                                                      reservation['reserveId'],
+                                                      widget.uid,
+                                                      reservation['rDate']
+                                                          .toString(),
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        )
-                                      : ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: otherReservations.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            final reservation =
-                                                otherReservations[index];
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 8.0,
-                                                horizontal: 20.0,
-                                              ),
-                                              child: ReservationCard(
-                                                roomName:
-                                                    reservation['roomName'],
-                                                roomImage: reservation['image'],
-                                                reservationDate:
-                                                    reservation['reserveDate'],
-                                                capacity:
-                                                    reservation['capacity'],
-                                                location:
-                                                    reservation['location'],
-                                                detail: 'Meeting with clients',
-                                                roomId: reservation['roomId'],
-                                                size: reservation['size'],
-                                                time:
-                                                    reservation['reserveTime'],
-                                                onPressed: () {
-                                                  deleteReservation(
-                                                    reservation['reserveId'],
-                                                    widget.uid,
-                                                    reservation['rDate']
-                                                        .toString(),
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                ],
-                              )
-                            ],
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
