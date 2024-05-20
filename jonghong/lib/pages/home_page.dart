@@ -31,6 +31,7 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return MaterialApp(
       title: 'Home Page',
       home: Scaffold(
@@ -94,7 +95,7 @@ class _HomepageState extends State<Homepage> {
                         padding: const EdgeInsets.only(top: 190.0),
                         child: Container(
                           width: double.infinity,
-                          height: 1000,
+                          height: screenHeight - 450.0,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
@@ -200,8 +201,7 @@ class _HomepageState extends State<Homepage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      BottomNavigation(),
+                                  builder: (context) => BottomNavigation(),
                                 ),
                               );
                             } catch (e) {
