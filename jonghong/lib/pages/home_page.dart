@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:jonghong/main.dart';
-import 'package:jonghong/pages/room_list.dart';
 import 'package:jonghong/services/firebase_service.dart';
 
 bool isWeb =
@@ -164,6 +163,7 @@ class _HomepageState extends State<Homepage> {
                                 final GoogleSignInAuthentication googleAuth =
                                     await googleUser.authentication;
 
+                                // ignore: unnecessary_null_comparison
                                 if (googleAuth == null) {
                                   print(
                                       'Google authentication data is not available.');
@@ -184,8 +184,8 @@ class _HomepageState extends State<Homepage> {
                                     msg:
                                         'Invalid email format. Please use @mail.kmutt.ac.th email address.',
                                     gravity: ToastGravity.CENTER,
-                                    backgroundColor:
-                                        Color.fromARGB(255, 255, 149, 149),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 255, 149, 149),
                                     textColor: Colors.white,
                                   );
                                   return;
@@ -201,7 +201,8 @@ class _HomepageState extends State<Homepage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BottomNavigation(),
+                                  builder: (context) =>
+                                      const BottomNavigation(),
                                 ),
                               );
                             } catch (e) {
