@@ -60,7 +60,7 @@ class ReservePageState extends State<ReservePage> {
     ReservationService reservationService = ReservationService();
     final success =
         await reservationService.reserveRoom(uid, roomId, date, timeSlot);
-
+    
     if (success != 'could not reserve room') {
       showDialog(
         context: context,
@@ -130,13 +130,10 @@ class ReservePageState extends State<ReservePage> {
     return await reservationService.notReservedTime(roomId, date);
   }
 
-  Future<bool> hasReservedAtThisTime(
-      String uid, String roomId, DateTime date, String time) async {
+  Future<bool> hasReservedAtThisTime(String uid, String roomId, DateTime date, String time) async {
     ReservationService reservationService = ReservationService();
-    return await reservationService.hasReservedAtThisTime(
-        uid, roomId, date, time);
+    return await reservationService.hasReservedAtThisTime(uid, roomId, date, time);
   }
-
 //HERE
   @override
   Widget build(BuildContext context) {
@@ -310,9 +307,12 @@ class ReservePageState extends State<ReservePage> {
                           builder: (context, child) {
                             return Theme(
                               data: ThemeData(
-                                brightness: Brightness.light,
-                                primaryColor: Colors.orange,
-                                hintColor: Colors.black,
+                                brightness: Brightness
+                                    .light, 
+                                primaryColor: Colors
+                                    .orange, 
+                                hintColor: Colors
+                                    .black, 
                               ),
                               child: child!,
                             );
@@ -332,7 +332,6 @@ class ReservePageState extends State<ReservePage> {
                                 ? 'dd/mm/yyyy'
                                 : selectedDate!.toString().substring(0, 10),
                             style: const TextStyle(
-                                fontSize: 11.0,
                                 fontFamily: 'Poppins',
                                 color: Color(0xFFFE5B3D)),
                           ),
@@ -408,7 +407,6 @@ class ReservePageState extends State<ReservePage> {
                                 child: Text(
                                   timeSlot,
                                   style: TextStyle(
-                                    fontSize: 11.0,
                                     fontFamily: 'Poppins',
                                     color: selectedTimeSlot == timeSlot
                                         ? const Color.fromARGB(
@@ -435,6 +433,35 @@ class ReservePageState extends State<ReservePage> {
                       fontFamily: 'Poppins',
                       color: Color(0xFFFE5B3D)),
                 ),
+                // const Text(
+                //   'Purpose:',
+                //   style: TextStyle(
+                //       fontSize: 16.0,
+                //       fontFamily: 'Poppins',
+                //       fontWeight: FontWeight.w600,
+                //       color: Color(0xFFFE5B3D)),
+                // ),
+                const SizedBox(height: 10.0),
+                // TextFormField(
+                //   keyboardType: TextInputType.multiline,
+                //   maxLines: 4,
+                //   decoration: InputDecoration(
+                //     filled: true,
+                //     fillColor: Colors.grey[200],
+                //     hintText: 'Please type your purpose of using',
+                //     hintStyle: TextStyle(
+                //       fontSize: 12.0,
+                //       fontFamily: 'Poppins',
+                //       color: Colors.grey[500],
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(10.0),
+                //     ),
+                //   ),
+                //   onChanged: (value) {
+                //     purpose = value;
+                //   },
+                // ),
                 const SizedBox(height: 10.0),
                 Row(
                     mainAxisAlignment:
@@ -453,7 +480,7 @@ class ReservePageState extends State<ReservePage> {
                           child: const Text(
                             'Book',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold, // Make text bold
                               color: Colors.white,
                             ),
@@ -471,63 +498,62 @@ class ReservePageState extends State<ReservePage> {
                                     (date.day == DateTime.now().day &&
                                         endHour > DateTime.now().hour)) {
                                   if (await checkLimit(widget.uid, date)) {
-                                    if (!await hasReservedAtThisTime(widget.uid,
-                                        room.roomId, date, selectedTimeSlot)) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'Confirm reserved room?'),
-                                            content: const Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                    if (!await hasReservedAtThisTime(widget.uid, room.roomId, date, selectedTimeSlot)) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Confirm reserved room?'),
+                                          content: const Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                            Color>(
+                                                        Colors.grey.shade300),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.black),
+                                              ),
+                                              child: const Text('Cancel'),
                                             ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                              Color>(
-                                                          Colors.grey.shade300),
-                                                  foregroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(Colors.black),
-                                                ),
-                                                child: const Text('Cancel'),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close confirmation dialog
+                                                // Reserve room
+                                                addLimit(widget.uid, date);
+                                                reserveRoom(
+                                                    room.roomId,
+                                                    widget.uid,
+                                                    date,
+                                                    selectedTimeSlot);
+                                                // purpose);
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                            Color>(
+                                                        Colors.orange.shade900),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.white),
                                               ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close confirmation dialog
-                                                  // Reserve room
-                                                  addLimit(widget.uid, date);
-                                                  reserveRoom(
-                                                      room.roomId,
-                                                      widget.uid,
-                                                      date,
-                                                      selectedTimeSlot);
-                                                  // purpose);
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty
-                                                          .all<Color>(Colors
-                                                              .orange.shade900),
-                                                  foregroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(Colors.white),
-                                                ),
-                                                child: const Text('Confirm'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                              child: const Text('Confirm'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                     } else {
                                       showDialog(
                                         context: context,
@@ -567,7 +593,7 @@ class ReservePageState extends State<ReservePage> {
                                         );
                                       },
                                     );
-                                  }
+                                  } 
                                 } else {
                                   showDialog(
                                     context: context,
