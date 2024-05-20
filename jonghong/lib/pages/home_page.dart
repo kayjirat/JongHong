@@ -30,15 +30,7 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and height
-    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // Calculate responsive padding and margin
-    final double horizontalMargin = screenWidth * 0.1; // 10% of screen width
-    final double verticalMargin = screenHeight * 0.05; // 5% of screen height
-    final double verticalPadding = screenHeight * 0.01; // 1% of screen height
-
     return MaterialApp(
       title: 'Home Page',
       home: Scaffold(
@@ -217,11 +209,9 @@ class _HomepageState extends State<Homepage> {
                           },
                           child: Container(
                             width: double.infinity,
-                            padding:
-                                EdgeInsets.symmetric(vertical: verticalPadding),
-                            margin: EdgeInsets.symmetric(
-                                horizontal: horizontalMargin,
-                                vertical: verticalMargin),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 20),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: const LinearGradient(
