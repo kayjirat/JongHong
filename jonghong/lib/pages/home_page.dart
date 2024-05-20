@@ -30,6 +30,7 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return MaterialApp(
       title: 'Home Page',
       home: Scaffold(
@@ -93,7 +94,7 @@ class _HomepageState extends State<Homepage> {
                         padding: const EdgeInsets.only(top: 190.0),
                         child: Container(
                           width: double.infinity,
-                          height: 318.2,
+                          height: screenHeight - 450.0,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
@@ -144,77 +145,92 @@ class _HomepageState extends State<Homepage> {
                               UserCredential? userCredential;
                               if (isWeb || kIsWeb) {
                                 // final GoogleSignIn googleSignIn = GoogleSignIn();
-                                 final GoogleAuthProvider googleProvider =
+                                final GoogleAuthProvider googleProvider =
                                     GoogleAuthProvider();
                                 // userCredential =
                                 //     await auth.signInWithPopup(googleProvider);
-                                userCredential = await auth.signInWithPopup(googleProvider);
+                                userCredential =
+                                    await auth.signInWithPopup(googleProvider);
 
-                                  // Check if the user's email is from "@kmutt.ac.th" domain
-                                  if (!userCredential.user!.email!.endsWith('@mail.kmutt.ac.th')) {
-                                    // Sign out the user if the email is not from "@kmutt.ac.th"
-                                    
-                                    // Display an error message or prompt the user to sign in again with a valid email
-                                    // For example:
-                                    Fluttertoast.showToast(
-                                      msg: 'Invalid email format. Please use @mail.kmutt.ac.th email address.',
-                                      gravity: ToastGravity.CENTER,
-                                      backgroundColor: Color.fromARGB(255, 255, 149, 149),
-                                      textColor: Colors.white,
-                                    );
-                                    await googleSignIn.signOut();
-                                  }
+                                // Check if the user's email is from "@kmutt.ac.th" domain
+                                if (!userCredential.user!.email!
+                                    .endsWith('@mail.kmutt.ac.th')) {
+                                  // Sign out the user if the email is not from "@kmutt.ac.th"
+
+                                  // Display an error message or prompt the user to sign in again with a valid email
+                                  // For example:
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        'Invalid email format. Please use @mail.kmutt.ac.th email address.',
+                                    gravity: ToastGravity.CENTER,
+                                    backgroundColor:
+                                        Color.fromARGB(255, 255, 149, 149),
+                                    textColor: Colors.white,
+                                  );
+                                  await googleSignIn.signOut();
+                                }
                               } else {
-                                final GoogleSignIn googleSignIn = GoogleSignIn();
+                                final GoogleSignIn googleSignIn =
+                                    GoogleSignIn();
                                 GoogleSignInAccount? googleUser;
 
                                 while (true) {
                                   googleUser = await googleSignIn.signIn();
 
                                   if (googleUser == null) {
-                                    print('Google Sign-In was cancelled or failed.');
+                                    print(
+                                        'Google Sign-In was cancelled or failed.');
                                     return; // Exit if sign-in was cancelled
                                   }
 
-                                  final emailPattern = RegExp(r'^[a-zA-Z0-9_.+-]+@mail\.kmutt\.ac\.th$');
-                                  if (!emailPattern.hasMatch(googleUser.email)) {
+                                  final emailPattern = RegExp(
+                                      r'^[a-zA-Z0-9_.+-]+@mail\.kmutt\.ac\.th$');
+                                  if (!emailPattern
+                                      .hasMatch(googleUser.email)) {
                                     Fluttertoast.showToast(
-                                      msg: 'Invalid email format. Please use @mail.kmutt.ac.th email address.',
+                                      msg:
+                                          'Invalid email format. Please use @mail.kmutt.ac.th email address.',
                                       gravity: ToastGravity.CENTER,
-                                      backgroundColor: Color.fromARGB(255, 255, 149, 149),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 255, 149, 149),
                                       textColor: Colors.white,
                                     );
 
-                                    await googleSignIn.signOut(); // Sign out the invalid user
-                                    
+                                    await googleSignIn
+                                        .signOut(); // Sign out the invalid user
                                   }
 
-                                  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+                                  final GoogleSignInAuthentication googleAuth =
+                                      await googleUser.authentication;
                                   if (googleAuth == null) {
-                                    print('Google authentication data is not available.');
+                                    print(
+                                        'Google authentication data is not available.');
                                     return;
                                   }
 
-                                  final AuthCredential credential = GoogleAuthProvider.credential(
+                                  final AuthCredential credential =
+                                      GoogleAuthProvider.credential(
                                     idToken: googleAuth.idToken,
                                     accessToken: googleAuth.accessToken,
                                   );
 
-                                  userCredential = await auth.signInWithCredential(credential);
+                                  userCredential = await auth
+                                      .signInWithCredential(credential);
                                   break; // Exit the loop if a valid email was used
                                 }
                               }
 
                               if (userCredential != null) {
-                                await FirebaseService().checkOrCreateUser(userCredential.user!);
+                                await FirebaseService()
+                                    .checkOrCreateUser(userCredential.user!);
 
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BottomNavigation(),
-                                ),
-                              );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const BottomNavigation(),
+                                  ),
+                                );
                               }
                             } catch (e) {
                               print('Error during Google Sign-In: $e');
@@ -266,6 +282,3 @@ class _HomepageState extends State<Homepage> {
     );
   }
 }
-
-
-
