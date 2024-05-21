@@ -161,7 +161,7 @@ class _HomepageState extends State<Homepage> {
                                   // For example:
                                   Fluttertoast.showToast(
                                     msg:
-                                        'Invalid email format. Please use @mail.kmutt.ac.th email address.',
+                                        'Invalid email format.\nPlease use @mail.kmutt.ac.th email address.',
                                     gravity: ToastGravity.CENTER,
                                     backgroundColor:
                                         Color.fromARGB(255, 255, 149, 149),
