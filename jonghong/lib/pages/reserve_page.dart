@@ -332,7 +332,7 @@ class ReservePageState extends State<ReservePage> {
                                 ? 'dd/mm/yyyy'
                                 : selectedDate!.toString().substring(0, 10),
                             style: const TextStyle(
-                                fontSize: 11.0,
+                                fontSize: 10.0,
                                 fontFamily: 'Poppins',
                                 color: Color(0xFFFE5B3D)),
                           ),
@@ -408,7 +408,7 @@ class ReservePageState extends State<ReservePage> {
                                 child: Text(
                                   timeSlot,
                                   style: TextStyle(
-                                    fontSize: 11.0,
+                                    fontSize: 10.0,
                                     fontFamily: 'Poppins',
                                     color: selectedTimeSlot == timeSlot
                                         ? const Color.fromARGB(

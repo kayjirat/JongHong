@@ -152,23 +152,7 @@ class _HomepageState extends State<Homepage> {
                                 userCredential =
                                     await auth.signInWithPopup(googleProvider);
 
-                                // Check if the user's email is from "@kmutt.ac.th" domain
-                                if (!userCredential.user!.email!
-                                    .endsWith('@mail.kmutt.ac.th')) {
-                                  // Sign out the user if the email is not from "@kmutt.ac.th"
-
-                                  // Display an error message or prompt the user to sign in again with a valid email
-                                  // For example:
-                                  Fluttertoast.showToast(
-                                    msg:
-                                        'Invalid email format.\nPlease use @mail.kmutt.ac.th email address.',
-                                    gravity: ToastGravity.CENTER,
-                                    backgroundColor:
-                                        Color.fromARGB(255, 255, 149, 149),
-                                    textColor: Colors.white,
-                                  );
-                                  await googleSignIn.signOut();
-                                }
+                                
                               } else {
                                 final GoogleSignIn googleSignIn =
                                     GoogleSignIn();
@@ -198,6 +182,7 @@ class _HomepageState extends State<Homepage> {
 
                                     await googleSignIn
                                         .signOut(); // Sign out the invalid user
+                                    continue;
                                   }
 
                                   final GoogleSignInAuthentication googleAuth =
