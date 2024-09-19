@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "911882774133",
+    "project_id": "jonghong-72a28",
+    "storage_bucket": "jonghong-72a28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911882774133:android:73ef0c7e20ff0c9a23fa3c",
+        "android_client_info": {
+          "package_name": "com.example.jonghong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911882774133-3u77gq65nvhvtfqdrv3acrrib9at2ehc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu2swrtXhKURreuTAWilLwJiklHDo4Ea4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911882774133-3u77gq65nvhvtfqdrv3acrrib9at2ehc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
